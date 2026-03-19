@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── better-auth required tables ──────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // ─── Onboarding fields ───────────────────────────────────────────
+  displayName         String?
+  onboardingCompleted Boolean @default(false)
+
+  sessions Session[]
+  accounts Account[]
+
+  // Associação da organização
+  organizacaoId String?
+  organizacao   Organizacao? @relation(fields: [organizacaoId], references: [id], onDelete: SetNull)
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(uuid())
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+// ─── Business Models (MeuCargueiro) ──────────────────────────────────────────
+
+model Organizacao {
+  id           String           @id @default(uuid())
+  nome         String
+  slug         String           @unique
+  plano        PlanoOrganizacao @default(GRATUITO)
+  criadoEm     DateTime         @default(now())
+  atualizadoEm DateTime         @updatedAt
+  deletadoEm   DateTime?
+
+  usuarios               User[]
+  veiculos               Veiculo[]
+  fretes                 Frete[]
+  registrosAbastecimento RegistroAbastecimento[]
+  registrosManutencao    RegistroManutencao[]
+  lancamentosFinanceiros LancamentoFinanceiro[]
+
+  @@map("organizacoes")
+}
+
+model Veiculo {
+  id                String       @id @default(uuid())
+  placa             String
+  modelo            String
+  marca             String?
+  ano               Int?
+  capacidadeCargaKg Float?
+  tipo              TipoVeiculo?
+  organizacaoId     String
+  organizacao       Organizacao  @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+  criadoEm          DateTime     @default(now())
+  atualizadoEm      DateTime     @updatedAt
+  deletadoEm        DateTime?
+
+  fretes                 Frete[]
+  registrosAbastecimento RegistroAbastecimento[]
+  registrosManutencao    RegistroManutencao[]
+  lancamentosFinanceiros LancamentoFinanceiro[]
+
+  @@unique([placa, organizacaoId])
+  @@index([organizacaoId])
+  @@map("veiculos")
+}
+
+model Frete {
+  id              String      @id @default(uuid())
+  veiculoId       String
+  veiculo         Veiculo     @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  origem          String
+  destino         String
+  distanciaKm     Float?
+  pesoCargaKg     Float?
+  tipoCarga       String?
+  valor           Decimal     @db.Decimal(10, 2)
+  valorMinimoAntt Decimal?    @db.Decimal(10, 2)
+  data            DateTime    @db.Date
+  observacoes     String?     @db.Text
+  organizacaoId   String
+  organizacao     Organizacao @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+  criadoEm        DateTime    @default(now())
+  atualizadoEm    DateTime    @updatedAt
+  deletadoEm      DateTime?
+
+  @@index([organizacaoId, data])
+  @@index([veiculoId])
+  @@map("fretes")
+}
+
+model RegistroAbastecimento {
+  id            String      @id @default(uuid())
+  veiculoId     String
+  veiculo       Veiculo     @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  data          DateTime    @db.Date
+  litros        Float
+  valor         Decimal     @db.Decimal(10, 2)
+  precoPorLitro Decimal?    @db.Decimal(10, 4)
+  local         String?
+  organizacaoId String
+  organizacao   Organizacao @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+  criadoEm      DateTime    @default(now())
+  atualizadoEm  DateTime    @updatedAt
+
+  @@index([organizacaoId])
+  @@index([veiculoId])
+  @@map("registros_abastecimento")
+}
+
+model RegistroManutencao {
+  id                    String         @id @default(uuid())
+  veiculoId             String
+  veiculo               Veiculo        @relation(fields: [veiculoId], references: [id], onDelete: Cascade)
+  tipo                  TipoManutencao
+  data                  DateTime       @db.Date
+  valor                 Decimal        @db.Decimal(10, 2)
+  oficina               String?
+  descricao             String?        @db.Text
+  dataProximaManutencao DateTime?      @db.Date
+  organizacaoId         String
+  organizacao           Organizacao    @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+  criadoEm              DateTime       @default(now())
+  atualizadoEm          DateTime       @updatedAt
+  deletadoEm            DateTime?
+
+  @@index([organizacaoId])
+  @@index([veiculoId])
+  @@map("registros_manutencao")
+}
+
+model LancamentoFinanceiro {
+  id            String           @id @default(uuid())
+  descricao     String
+  tipo          TipoLancamento
+  categoria     CategoriaLancamento
+  valor         Decimal          @db.Decimal(10, 2)
+  data          DateTime         @db.Date
+  recorrente    Boolean          @default(false)
+  veiculoId     String?
+  veiculo       Veiculo?         @relation(fields: [veiculoId], references: [id], onDelete: SetNull)
+  organizacaoId String
+  organizacao   Organizacao      @relation(fields: [organizacaoId], references: [id], onDelete: Cascade)
+  criadoEm      DateTime         @default(now())
+  atualizadoEm  DateTime         @updatedAt
+  deletadoEm    DateTime?
+
+  @@index([organizacaoId])
+  @@index([veiculoId])
+  @@map("lancamentos_financeiros")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum PlanoOrganizacao {
+  GRATUITO
+  PREMIUM
+  EMPRESARIAL
+}
+
+enum TipoVeiculo {
+  BAU
+  TANQUE
+  GRADE_BAIXA
+  REFRIGERADO
+  OUTRO
+}
+
+enum TipoManutencao {
+  TROCA_OLEO
+  PNEU
+  FREIOS
+  FILTRO
+  SUSPENSAO
+  ELETRICA
+  OUTRO
+}
+
+enum TipoLancamento {
+  RECEITA
+  DESPESA
+}
+
+enum CategoriaLancamento {
+  FRETE
+  SERVICO
+  IMPOSTOS
+  TELEFONE
+  ALUGUEL
+  SEGURO
+  OUTRO
+}

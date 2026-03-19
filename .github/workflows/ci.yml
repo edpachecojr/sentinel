@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    env:
+      # Prisma gera o client no postinstall. Garantimos que a variável existe para evitar falhas
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js + npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build (Next.js)
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Deploy to Vercel
+        run: |
+          curl -X POST ${{ secrets.VERCEL_DEPLOY_WEBHOOK }} \
+            -H "Content-Type: application/json" \
+            -d '{"ref":"${{ github.ref }}","sha":"${{ github.sha }}"}'
+        if: success()
+        env:
+          VERCEL_DEPLOY_WEBHOOK: ${{ secrets.VERCEL_DEPLOY_WEBHOOK }}
