@@ -29,12 +29,3 @@ jobs:
 
       - name: Run tests
         run: npm run test:run
-
-      - name: Deploy to Vercel
-        run: |
-          curl -X POST ${{ secrets.VERCEL_DEPLOY_WEBHOOK }} \
-            -H "Content-Type: application/json" \
-            -d '{"ref":"${{ github.ref }}","sha":"${{ github.sha }}"}'
-        if: success()
-        env:
-          VERCEL_DEPLOY_WEBHOOK: ${{ secrets.VERCEL_DEPLOY_WEBHOOK }}
