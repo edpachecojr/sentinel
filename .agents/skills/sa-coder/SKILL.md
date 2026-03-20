@@ -171,9 +171,13 @@ git commit -m "type(scope): descrição curta"
 | `fix` | Bug fix |
 | `refactor` | Code change sem mudança de comportamento |
 | `test` | Adição ou correção de testes |
-| `chore` | Configuração, dependências |
+| `docs` | Documentação (README, AGENTS.md, SKILL.md, planos, etc) |
+| `style` | Formatação, espaçamento, ponto-e-vírgula (sem mudança lógica) |
+| `perf` | Melhoria de performance |
+| `chore` | Configuração, dependências, build, tooling |
+| `ci` | CI/CD, GitHub Actions, scripts de build |
 
-Exemplo: `feat(veiculos): add VeiculoRepository with org filtering and soft delete`
+Exemplo: `feat(veiculos): adicionar VeiculoRepository com filtragem de org e soft delete`
 
 ---
 
