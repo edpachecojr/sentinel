@@ -84,7 +84,7 @@ export class AutenticacaoServico implements IAutenticacaoServico {
         id: session.user.id,
         email: session.user.email,
         nome: session.user.name,
-        displayName: session.user.name,
+        displayName: session.user.displayName ?? session.user.name,
         onboardingCompleted: session.user.onboardingCompleted as boolean | undefined,
         organizacaoId: session.user.organizacaoId as string | undefined,
       },

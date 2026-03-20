@@ -10,9 +10,7 @@ const schema = z.object({
   displayName: z.string().min(1, { message: "Nome de exibição é obrigatório" }),
 });
 
-export type EstadoOnboarding =
-  | { success: true; organizacaoId: string }
-  | { success: false; error: string };
+export type EstadoOnboarding = { success: false; error: string };
 
 export async function completeOnboarding(data: unknown): Promise<EstadoOnboarding> {
   const usuario = await obterUsuario();

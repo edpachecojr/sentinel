@@ -3,9 +3,7 @@
 import { redirect } from 'next/navigation';
 import { container } from '@/container';
 
-export type EstadoSair =
-  | { success: true }
-  | { success: false; error: string };
+export type EstadoSair = { success: false; error: string };
 
 export async function sairAction(): Promise<EstadoSair> {
   try {
