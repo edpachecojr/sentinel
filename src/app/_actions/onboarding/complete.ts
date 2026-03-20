@@ -2,19 +2,27 @@
 
 import { redirect } from "next/navigation";
 import { sessionService } from "@/infrastructure/services/SessionService";
-import { completeOnboardingService } from "@/infrastructure/services/onboarding/complete";
+import { concluirOnboardingCommand } from "@/application/commands/ConcluirOnboardingCommand";
+import { ConcluirOnboardingCommandHandler } from "@/application/handlers/ConcluirOnboardingCommandHandler";
 
-export async function completeOnboarding(data: {
-  displayName: string;
-  orgName: string;
-}) {
+export type EstadoOnboarding =
+  | { success: true; organizacaoId: string }
+  | { success: false; error: string };
+
+export async function completeOnboarding(data: unknown): Promise<EstadoOnboarding> {
   const user = await sessionService.requireUser();
 
-  await completeOnboardingService({
-    userId: user.id,
-    displayName: data.displayName,
-    orgName: data.orgName,
-  });
+  const parsed = concluirOnboardingCommand.safeParse(data);
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.errors[0]?.message ?? "Dados inválidos" };
+  }
+
+  const handler = new ConcluirOnboardingCommandHandler();
+  const resultado = await handler.handle(user.id, parsed.data);
+
+  if (!resultado.success) {
+    return { success: false, error: resultado.error };
+  }
 
   redirect("/dashboard");
 }

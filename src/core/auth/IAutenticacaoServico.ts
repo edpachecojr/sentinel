@@ -7,7 +7,7 @@ import type { AutenticarUsuarioResultado } from "../casosDeUso/autenticacao/dtos
 export interface IAutenticacaoServico {
   autenticar(dto: AutenticarUsuarioDto): Promise<AutenticarUsuarioResultado>;
   validarSessao(token: string): Promise<boolean>;
-  invalidarSessao(token: string): Promise<void>;
+  sair(): Promise<void>;
   obterUsuarioPorToken(token: string): Promise<Usuario>;
   registrar(data: RegistrarUsuarioDto): Promise<RegistrarUsuarioResultado>;
 }

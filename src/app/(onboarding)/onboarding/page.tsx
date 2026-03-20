@@ -24,15 +24,10 @@ export default async function OnboardingPage() {
 
   const initialDisplayName = getInitialDisplayName(user.name, user.displayName);
 
-  async function handleSubmit(data: { displayName: string; orgName: string }) {
-    "use server";
-    await completeOnboarding(data);
-  }
-
   return (
     <OnboardingContainer
       initialDisplayName={initialDisplayName}
-      onSubmit={handleSubmit}
+      onSubmit={completeOnboarding}
     />
   );
 }

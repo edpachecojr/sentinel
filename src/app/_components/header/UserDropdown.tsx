@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { signOut, useSession } from "@/infrastructure/lib/auth-client";
+import { useSession } from "@/infrastructure/lib/auth-client";
 import { logger } from "@/infrastructure/lib/logger";
+import { sairAction } from "@/app/_actions/auth/sair";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 
@@ -36,20 +37,16 @@ export default function UserDropdown() {
   async function handleSignOut() {
     if (isPending) return;
     setIsPending(true);
-    try {
-      await signOut({
-        fetchOptions: {
-          onSuccess: () => {
-            router.push("/login");
-          },
-        },
-      });
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Erro ao sair";
-      logger.error("signout:error", { error: message });
-    } finally {
-      setIsPending(false);
-    }
+
+    startTransition(async () => {
+      try {
+        await sairAction();
+      } catch {
+        // redirect() from next/navigation throws to stop rendering, ignore
+      } finally {
+        setIsPending(false);
+      }
+    });
   }
 
   const userName = (session?.user as any)?.displayName ?? session?.user?.name ?? "Usuário";
