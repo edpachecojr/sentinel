@@ -1,14 +1,10 @@
 import { auth } from "@/infrastructure/lib/auth";
 import { headers } from "next/headers";
-import type { IAutenticacaoServico } from "@/core/abstraction/servicos/IAutenticacaoServico";
-import type { RegistrarUsuarioDto } from "../../../core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
-import type { RegistrarUsuarioResultado } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioResultado";
-import type { AutenticarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/AutenticarUsuarioDto";
-import type { AutenticarUsuarioResultado } from "@/core/casosDeUso/autenticacao/dtos/AutenticarUsuarioResultado";
+import type { IAutenticacaoServico, RegistrarUsuarioParams, RegistrarUsuarioResultado, AutenticarUsuarioParams, AutenticarUsuarioResultado } from "@/core/abstraction/servicos/IAutenticacaoServico";
 import { AuthenticationError } from "@/core/abstraction/errors/auth";
 
 export class AutenticacaoServico implements IAutenticacaoServico {
-  async registrar(data: RegistrarUsuarioDto): Promise<RegistrarUsuarioResultado> {
+  async registrar(data: RegistrarUsuarioParams): Promise<RegistrarUsuarioResultado> {
     const resultado = await auth.api.signUpEmail({
       body: {
         name: data.nome,
@@ -25,7 +21,7 @@ export class AutenticacaoServico implements IAutenticacaoServico {
     return { usuarioId: resultado.user.id };
   }
 
-  async autenticar(dto: AutenticarUsuarioDto): Promise<AutenticarUsuarioResultado> {
+  async autenticar(dto: AutenticarUsuarioParams): Promise<AutenticarUsuarioResultado> {
     const response = await auth.api.signInEmail({
       body: {
         email: dto.email,

@@ -10,12 +10,21 @@ import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
 import { logger } from "@/infrastructure/lib/logger";
-import { registroUsuarioCommand } from "@/core/casosDeUso/autenticacao/commands/RegistroUsuarioCommand";
 import { registrarUsuarioAction } from "@/app/_actions/auth/registrarUsuario";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
-import type { z } from "zod";
+import { z } from "zod";
 
-type RegisterFormValues = z.infer<typeof registroUsuarioCommand>;
+const registroSchema = z.object({
+  name: z.string().min(1, { message: "Nome é obrigatório" }),
+  email: z.string().email({ message: "Email inválido" }),
+  password: z.string().min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não correspondem",
+  path: ["confirmPassword"],
+});
+
+type RegisterFormValues = z.infer<typeof registroSchema>;
 
 function toPortugueseMessage(error: string): string {
   if (error.includes("Email")) return "Email inválido ou já em uso";
@@ -57,7 +66,7 @@ export function RegisterForm() {
     setFieldErrors({});
 
     // Client-side validation
-    const validation = registroUsuarioCommand.safeParse(formData);
+    const validation = registroSchema.safeParse(formData);
     if (!validation.success) {
       const errors: Record<string, string> = {};
       validation.error.issues.forEach((issue) => {
