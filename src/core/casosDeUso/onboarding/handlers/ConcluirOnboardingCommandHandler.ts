@@ -1,5 +1,4 @@
-import { ConcluirOnboardingUseCase } from "@/core/casosDeUso/onboarding/ConcluirOnboarding";
-import { OnboardingServico } from "@/infrastructure/services/onboarding/OnboardingServico";
+import type { ConcluirOnboardingUseCase } from "@/core/casosDeUso/onboarding/ConcluirOnboarding";
 import type { ConcluirOnboardingCommand } from "@/core/casosDeUso/onboarding/commands/ConcluirOnboardingCommand";
 import type { ConcluirOnboardingResultado } from "@/core/casosDeUso/onboarding/dtos/ConcluirOnboardingResultado";
 
@@ -8,12 +7,7 @@ export type RespostaOnboarding<T> =
   | { success: false; error: string };
 
 export class ConcluirOnboardingCommandHandler {
-  private readonly useCase: ConcluirOnboardingUseCase;
-
-  constructor() {
-    const onboardingServico = new OnboardingServico();
-    this.useCase = new ConcluirOnboardingUseCase(onboardingServico);
-  }
+  constructor(private readonly useCase: ConcluirOnboardingUseCase) {}
 
   async handle(
     userId: string,

@@ -1,41 +1,18 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { prisma } from "@/infrastructure/lib/db";
-import { OnboardingServico } from "@/infrastructure/services/onboarding/OnboardingServico";
+import { describe, it } from "vitest";
 
-describe("OnboardingServico", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+/**
+ * Esta pasta contém testes para implementações concretas de Infrastructure.
+ * 
+ * Os testes de OnboardingServico foram consolidados em:
+ * - tests/core/onboarding/OnboardingServico.test.ts (lógica de negócio do Core)
+ * - tests/infrastructure/services/onboarding/PrismaUnitOfWork.test.ts (implementações Prisma)
+ * 
+ * Pois a lógica de orquestração agora fica no Core com injeção de dependência,
+ * e as implementações Prisma ficam em Infrastructure.
+ */
 
-    // Ensure transaction callback is executed
-    vi.mocked(prisma.$transaction).mockImplementation(async (callback: any) => {
-      return callback(prisma);
-    });
-  });
-
-  it("should create organization and update user within a transaction", async () => {
-    const service = new OnboardingServico();
-
-    const result = await service.concluir("user-123", {
-      displayName: "Test User",
-      orgName: "My Org",
-    });
-
-    expect(result.organizacaoId).toBeDefined();
-    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
-    expect(prisma.organizacao.create).toHaveBeenCalledWith({
-      data: {
-        id: expect.any(String),
-        nome: "My Org",
-        slug: expect.any(String),
-      },
-    });
-    expect(prisma.user.update).toHaveBeenCalledWith({
-      where: { id: "user-123" },
-      data: {
-        displayName: "Test User",
-        organizacaoId: expect.any(String),
-        onboardingCompleted: true,
-      },
-    });
+describe.skip("OnboardingServico - Tests consolidated", () => {
+  it.skip("see tests/core/onboarding and tests/infrastructure", () => {
+    // Placeholder — tests consolidated
   });
 });

@@ -976,6 +976,82 @@ expect(resultado).toEqual(mockFrete);
 
 ---
 
+### 14.5.1 Unit of Work Pattern — Transações sem Acoplamento
+
+Para casos que requerem múltiplas operações de banco de dados em uma única transação, use o padrão **Unit of Work**:
+
+**1. Definir abstração no Core:**
+```typescript
+// src/core/abstractions/IUnitOfWork.ts
+export interface IUnitOfWork {
+  executar<T>(fn: (tx: unknown) => Promise<T>): Promise<T>;
+}
+```
+
+**2. Implementar em Infrastructure com Prisma:**
+```typescript
+// src/infrastructure/services/onboarding/PrismaUnitOfWork.ts
+import { prisma } from "@/infrastructure/lib/db";
+import type { IUnitOfWork } from "@/core/abstractions/IUnitOfWork";
+
+export class PrismaUnitOfWork implements IUnitOfWork {
+  async executar<T>(fn: (tx: unknown) => Promise<T>): Promise<T> {
+    return (await prisma.$transaction(fn as any)) as T;
+  }
+}
+```
+
+**3. Usar no Core com injeção:**
+```typescript
+// src/core/casosDeUso/onboarding/OnboardingServico.ts
+export class OnboardingServico {
+  constructor(
+    private readonly uow: IUnitOfWork,
+    private readonly organizacaoRepo: IOrganizacaoRepositorio,
+    private readonly usuarioRepo: IUsuarioRepositorio
+  ) {}
+
+  async concluir(userId: string, dto: ConcluirOnboardingDto) {
+    const organizacaoId = generateId();
+
+    // UoW garante atomicidade sem o Core saber de Prisma
+    await this.uow.executar(async (tx) => {
+      await this.organizacaoRepo.criar(organizacao, tx);
+      await this.usuarioRepo.atualizar(usuario, tx);
+    });
+
+    return { organizacaoId };
+  }
+}
+```
+
+**4. Montar no Action (composition root):**
+```typescript
+// src/app/_actions/onboarding/concluirOnboarding.ts
+export async function completeOnboarding(data: unknown) {
+  const { organizacaoId } = await sessionService.requireUser();
+
+  const uow = new PrismaUnitOfWork();
+  const orgRepo = new PrismaOrganizacaoRepositorio();
+  const usuarioRepo = new PrismaUsuarioRepositorio();
+
+  const servico = new OnboardingServico(uow, orgRepo, usuarioRepo);
+  const useCase = new ConcluirOnboardingUseCase(servico);
+  const handler = new ConcluirOnboardingCommandHandler(useCase);
+
+  const resultado = await handler.handle(userId, dados);
+  // ...
+}
+```
+
+**Benefícios do padrão:**
+- ✅ Core **não depende de Prisma** — agnóstico ao banco
+- ✅ Transações **encapsuladas em Infrastructure**
+- ✅ Testes podem injetar mock de `IUnitOfWork` trivialmente
+- ✅ Trocar `$transaction` por outro padrão só afeta `PrismaUnitOfWork`
+
+---
+
 ### 14.6 Regras de Responsabilidade por Camada
 
 | Elemento | Camada | Padrão |
@@ -985,10 +1061,12 @@ expect(resultado).toEqual(mockFrete);
 | Client Components | Presentation | Funções React com `"use client"` |
 | Casos de uso | Core | Classes com injeção de dependência |
 | Interfaces de repositório | Core | `interface I<Nome>Repository` |
+| Interfaces de abstrações | Core | `interface IUnitOfWork`, etc. |
 | DTOs | Core | Types inferidos de Zod ou interfaces explícitas |
 | Schemas Zod | Core (`src/schemas/`) | Exportados como `camelCaseSchema` |
 | Types de domínio | Core (`src/types/`) | Interfaces TypeScript |
 | Implementações de repositório | Infrastructure | Classes que implementam `I<Nome>Repository` |
+| Implementações de abstrações | Infrastructure | `PrismaUnitOfWork`, etc. |
 | Adaptadores de libs externas | Infrastructure | Classes com interface própria |
 | Configuração de infra (auth, db) | Infrastructure (`src/lib/`) | Singletons de configuração |
 
@@ -1017,8 +1095,17 @@ Each feature follows a clear, predictable structure across all layers:
 ```
 src/
   core/
+    abstractions/             # Transaction and generic patterns
+      IUnitOfWork.ts          # Unit of Work interface for transactions
+    
+    repositorios/             # Repository interfaces defined by Core
+      IOrganizacaoRepositorio.ts
+      IUsuarioRepositorio.ts
+    
     models/                   # Type definitions (no runtime)
       usuario.ts
+      organizacao.ts
+    
     casosDeUso/              # Use case interfaces and DTOs
       autenticacao/
         IAutenticacaoServico.ts
@@ -1032,14 +1119,18 @@ src/
       RegistrarUsuarioUseCase.ts       # Implements IRegistrarUsuarioUseCase
   
   infrastructure/
-    services/                # Concrete service implementations
+    services/                # Concrete implementations of abstractions
       autenticacao/
         AutenticacaoServico.ts         # Wraps better-auth
         dtos/
           RegistroDTO.ts               # Re-exported from core
+      onboarding/
+        PrismaUnitOfWork.ts            # Implements IUnitOfWork
       SessionService.ts                # Session management
     
     repositories/            # Database access layer
+      PrismaOrganizacaoRepositorio.ts # Implements IOrganizacaoRepositorio
+      PrismaUsuarioRepositorio.ts     # Implements IUsuarioRepositorio
       UsuarioRepository.ts
       FreteRepository.ts
     
