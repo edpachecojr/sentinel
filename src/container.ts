@@ -22,10 +22,10 @@ import { ConcluirOnboardingHandler } from "@/core/casosDeUso/onboarding/concluir
 
 // ========== INFRAESTRUTURA ==========
 // Instancia uma vez — compartilhada por todos os handlers
-const autenticacaoServico = new AutenticacaoServico();
 const organizacaoRepo = new PrismaOrganizacaoRepositorio();
 const usuarioRepo = new PrismaUsuarioRepositorio();
 const prismaUow = new PrismaUnitOfWork();
+const autenticacaoServico = new AutenticacaoServico(organizacaoRepo);
 
 // ========== HANDLERS COM INJEÇÃO DE DEPENDÊNCIA ==========
 export const container = {

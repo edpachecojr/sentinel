@@ -18,3 +18,25 @@ export function buildAuthenticatedSession(orgId?: string) {
     },
   };
 }
+
+import type { SessaoAutenticada, UsuarioAutenticado } from "@/core/abstraction/servicos/IAutenticacaoServico";
+
+export function buildUsuarioAutenticado(overrides?: Partial<UsuarioAutenticado>): UsuarioAutenticado {
+  return {
+    id: AUTH_TEST_UUIDS.USER_ID,
+    email: "test@example.com",
+    nome: "Test User",
+    displayName: "Test",
+    onboardingCompleted: true,
+    organizacaoId: AUTH_TEST_UUIDS.ORG_ID,
+    ...overrides,
+  };
+}
+
+export function buildSessaoAutenticada(overrides?: Partial<SessaoAutenticada>): SessaoAutenticada {
+  return {
+    sessao: { id: AUTH_TEST_UUIDS.SESSION_ID },
+    usuario: buildUsuarioAutenticado(),
+    ...overrides,
+  };
+}

@@ -15,4 +15,12 @@ export class PrismaOrganizacaoRepositorio implements IOrganizacaoRepositorio {
       },
     });
   }
+
+  async buscarPorId(id: string): Promise<{ id: string; nome: string } | null> {
+    const organizacao = await prisma.organizacao.findFirst({
+      where: { id, deletadoEm: null },
+      select: { id: true, nome: true },
+    });
+    return organizacao;
+  }
 }

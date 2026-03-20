@@ -1,9 +1,21 @@
 import { auth } from "@/infra/lib/auth";
 import { headers } from "next/headers";
-import type { IAutenticacaoServico, RegistrarUsuarioParams, RegistrarUsuarioResultado, AutenticarUsuarioParams, AutenticarUsuarioResultado } from "@/core/abstraction/servicos/IAutenticacaoServico";
-import { AuthenticationError } from "@/core/abstraction/errors/auth";
+import type {
+  IAutenticacaoServico,
+  RegistrarUsuarioParams,
+  RegistrarUsuarioResultado,
+  AutenticarUsuarioParams,
+  AutenticarUsuarioResultado,
+  SessaoAutenticada,
+  UsuarioAutenticado,
+  OrganizacaoData,
+} from "@/core/abstraction/servicos/IAutenticacaoServico";
+import { AuthenticationError, UnauthenticatedError, InactiveUserError } from "@/core/abstraction/errors/auth";
+import type { IOrganizacaoRepositorio } from "@/core/abstraction/repositories/IOrganizacaoRepositorio";
 
 export class AutenticacaoServico implements IAutenticacaoServico {
+  constructor(private readonly organizacaoRepository: IOrganizacaoRepositorio) {}
+
   async registrar(data: RegistrarUsuarioParams): Promise<RegistrarUsuarioResultado> {
     const resultado = await auth.api.signUpEmail({
       body: {
@@ -52,6 +64,60 @@ export class AutenticacaoServico implements IAutenticacaoServico {
 
     if (!response.ok) {
       throw new AuthenticationError("Falha ao encerrar sessão.");
+    }
+  }
+
+  async obterSessao(): Promise<SessaoAutenticada | null> {
+    const headersList = await headers();
+    const session = await auth.api.getSession({
+      headers: headersList,
+    });
+
+    if (!session?.user || !session?.session) {
+      return null;
+    }
+
+    return {
+      sessao: session.session,
+      usuario: {
+        id: session.user.id,
+        email: session.user.email,
+        nome: session.user.name,
+        displayName: session.user.name,
+        onboardingCompleted: session.user.onboardingCompleted as boolean | undefined,
+        organizacaoId: session.user.organizacaoId as string | undefined,
+      },
+    };
+  }
+
+  async obterUsuario(): Promise<UsuarioAutenticado> {
+    const sessao = await this.obterSessao();
+
+    if (!sessao?.usuario) {
+      throw new UnauthenticatedError();
+    }
+
+    return {
+      id: sessao.usuario.id,
+      email: sessao.usuario.email,
+      nome: sessao.usuario.nome,
+      displayName: sessao.usuario.displayName,
+      onboardingCompleted: sessao.usuario.onboardingCompleted,
+      organizacaoId: sessao.usuario.organizacaoId,
+    };
+  }
+
+  async obterOrganizacao(): Promise<OrganizacaoData | null> {
+    try {
+      const usuario = await this.obterUsuario();
+
+      if (!usuario.organizacaoId) {
+        return null;
+      }
+
+      return await this.organizacaoRepository.buscarPorId(usuario.organizacaoId);
+    } catch {
+      return null;
     }
   }
 }

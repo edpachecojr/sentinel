@@ -2,8 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { sessionService } from "@/infra/services/SessionService";
 import { container } from "@/container";
+import { obterUsuario } from "@/infra/lib/session";
 
 const schema = z.object({
   orgName: z.string().min(1, { message: "Nome da organização é obrigatório" }),
@@ -15,7 +15,7 @@ export type EstadoOnboarding =
   | { success: false; error: string };
 
 export async function completeOnboarding(data: unknown): Promise<EstadoOnboarding> {
-  const user = await sessionService.requireUser();
+  const usuario = await obterUsuario();
 
   const parsed = schema.safeParse(data);
   if (!parsed.success) {
@@ -23,7 +23,7 @@ export async function completeOnboarding(data: unknown): Promise<EstadoOnboardin
   }
 
   try {
-    const resultado = await container.concluirOnboardingHandler.executar(user.id, parsed.data);
+    const resultado = await container.concluirOnboardingHandler.executar(usuario.id, parsed.data);
     redirect("/dashboard");
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro ao completar onboarding";

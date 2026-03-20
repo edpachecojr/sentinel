@@ -5,8 +5,9 @@ import type { IAutenticacaoServico } from '@/core/abstraction/servicos/IAutentic
 const mockServico: IAutenticacaoServico = {
   autenticar: vi.fn(),
   registrar: vi.fn().mockResolvedValue({ usuarioId: 'new-user-1' }),
-  sair: vi.fn(),
-};
+  sair: vi.fn(),  obterSessao: vi.fn(),
+  obterUsuario: vi.fn(),
+  obterOrganizacao: vi.fn(),};
 
 describe('RegistrarUsuarioHandler', () => {
   it('delega ao IAutenticacaoServico.registrar com params corretos', async () => {

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { OnboardingContainer } from "@/components/onboarding/OnboardingContainer";
 import { completeOnboarding } from "@/app/_actions/onboarding/concluirOnboarding";
-import { requireAuthOrRedirect } from "@/app/_actions/authAction";
+import { requireAuthOrRedirect } from "@/app/_lib/auth";
 
 function getInitialDisplayName(name: string | null | undefined, displayName?: string | null) {
   if (displayName?.trim()) {
@@ -16,13 +16,13 @@ function getInitialDisplayName(name: string | null | undefined, displayName?: st
 }
 
 export default async function OnboardingPage() {
-  const { user } = await requireAuthOrRedirect();
+  const { usuario } = await requireAuthOrRedirect();
 
-  if (user.onboardingCompleted) {
+  if (usuario.onboardingCompleted) {
     redirect("/dashboard");
   }
 
-  const initialDisplayName = getInitialDisplayName(user.name, user.displayName);
+  const initialDisplayName = getInitialDisplayName(usuario.nome, usuario.displayName);
 
   async function handleSubmit(data: { displayName: string; orgName: string }) {
     "use server";

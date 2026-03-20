@@ -6,6 +6,9 @@ const mockServico: IAutenticacaoServico = {
   autenticar: vi.fn().mockResolvedValue({ usuarioId: 'user-123' }),
   registrar: vi.fn(),
   sair: vi.fn(),
+  obterSessao: vi.fn(),
+  obterUsuario: vi.fn(),
+  obterOrganizacao: vi.fn(),
 };
 
 describe('AutenticarUsuarioHandler', () => {
