@@ -3,7 +3,7 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-up">
       <PageBreadcrumb pageTitle="Dashboard" showNavigation={true} />
       <ComponentCard
         title="Dashboard"

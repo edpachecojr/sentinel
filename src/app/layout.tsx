@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans scroll-smooth", geist.variable)}>
+    <html lang="pt-BR" className={cn("font-sans scroll-smooth", geist.variable)}>
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <ThemeProvider>
           <TooltipProvider>
