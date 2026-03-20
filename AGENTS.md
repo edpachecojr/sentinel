@@ -1273,4 +1273,218 @@ export async function criarFreteAction(data: unknown) {
 
 ---
 
+## 16. Regra de Formatação de Dados
+
+**Objetivo**: Separação clara de responsabilidades — formatação de dados (moeda, data, etc.) ocorre **sempre** na camada Core/Serviço, nunca na apresentação (components, pages, actions).
+
+### 16.1 Princípio Fundamental
+
+A camada de apresentação (UI) **nunca** formata dados. Ela recebe **ViewModels** com campos já convertidos para strings prontas para exibição. Isso garante:
+
+- ✅ **Desacoplamento de UI**: mudar a formatação não afeta componentes
+- ✅ **Performance**: sem `Intl.` no bundle do cliente
+- ✅ **Consistência**: único ponto de formatação para cada domínio
+- ✅ **Testabilidade**: lógica de formatação no Core, testável isoladamente
+
+### 16.2 Onde Formatar
+
+**✅ CORRETO — Handlers/Serviços do Core**
+
+Os handlers de casos de uso retornam **ViewModels** com campos formatados:
+
+```typescript
+// src/core/casosDeUso/fretes/ListarFretesHandler.ts
+import { formatBRL } from "@/utils/moeda";
+import { formatDate } from "@/utils/data";
+
+export class ListarFretesHandler {
+  async executar(organizacaoId: string): Promise<FreteListViewModel[]> {
+    const fretes = await this.repository.listar(organizacaoId);
+    
+    return fretes.map(f => ({
+      id: f.id,
+      origem: f.origem,
+      destino: f.destino,
+      distanciaKm: f.distanciaKm,                    // número puro
+      valorFormatado: formatBRL(f.valor),            // ← FORMATADO
+      dataFormatada: formatDate(f.data),             // ← FORMATADO
+      valorMinimoAnttFormatado: formatBRL(f.valorMinimoAntt), // ← FORMATADO
+    }));
+  }
+}
+```
+
+**❌ ERRADO — RSC/Pages/Components Formatando**
+
+```typescript
+// ❌ NUNCA FAÇA ISSO EM uma page.tsx ou component
+const fretes = await db.frete.findMany({ where: { organizacaoId } });
+
+export function FreteList({ fretes }) {
+  return fretes.map(f => (
+    <div>
+      {/* ❌ NÃO FORMATAR AQUI */}
+      <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(f.valor)}</span>
+      <span>{f.data.toLocaleDateString('pt-BR')}</span>
+    </div>
+  ));
+}
+```
+
+### 16.3 O Quê Formatar
+
+Sempre formatar os seguintes tipos de dados na saída de handlers/serviços:
+
+| Tipo | Função | Exemplo |
+|---|---|---|
+| **Moeda (BRL)** | `formatBRL(value)` | `formatBRL(1500)` → `"R$ 1.500,00"` |
+| **Data** | `formatDate(value)` | `formatDate(new Date())` → `"15/01/2024"` |
+| **Data+Hora** | `formatDateTime(value)` | `formatDateTime(new Date())` → `"15/01/2024 10:30"` |
+| **CPF** | `formatCPF(value)` (se implementado) | `formatCPF("12345678901")` → `"123.456.789-01"` |
+| **Telefone** | conforme padrão (se aplicável) | coordenar com design |
+| **Porcentagem** | `value.toFixed(2) + "%"` no handler | `15.5%` |
+
+### 16.4 Como Estruturar ViewModels
+
+Um ViewModel é a interface entre Core e Presentation. Deve estender `IViewModel` e usar sufixo `Formatado` para campos já convertidos:
+
+```typescript
+// src/core/casosDeUso/fretes/viewModels/FreteListViewModel.ts
+import type { IViewModel } from "@/core/abstraction/viewModels";
+
+export interface FreteListViewModel extends IViewModel {
+  readonly id: string;
+  readonly origem: string;
+  readonly destino: string;
+  readonly distanciaKm: number;                         // número puro — UI usa como quiser
+  readonly valorFormatado: string;                      // ← formatado (BRL → string)
+  readonly dataFormatada: string;                       // ← formatado (Date → string)
+  readonly valorMinimoAnttFormatado: string;            // ← formatado (BRL → string)
+}
+```
+
+**Regra**: Campos formatados **sempre** têm sufixo `Formatado` e são `readonly string`.
+
+### 16.5 Padrão Completo: Action → Handler → ViewModel → UI
+
+**Step 1: Action delega ao handler**
+```typescript
+// src/app/_actions/fretes/listar.ts
+"use server";
+
+import { container } from "@/container";
+import { sessionService } from "@/infra/lib/session";
+
+export async function listarFretesAction() {
+  const { organizacaoId } = await sessionService.requireOrgSession();
+  const viewModels = await container.listarFretesHandler.executar(organizacaoId);
+  return viewModels;
+}
+```
+
+**Step 2: Handler formata e retorna ViewModel**
+```typescript
+// src/core/casosDeUso/fretes/ListarFretesHandler.ts
+import { formatBRL } from "@/utils/moeda";
+import { formatDate } from "@/utils/data";
+import type { FreteListViewModel } from "./viewModels/FreteListViewModel";
+
+export class ListarFretesHandler {
+  constructor(private readonly repository: IFreteRepository) {}
+
+  async executar(organizacaoId: string): Promise<FreteListViewModel[]> {
+    const fretes = await this.repository.listar(organizacaoId);
+    
+    return fretes.map(f => ({
+      id: f.id,
+      origem: f.origem,
+      destino: f.destino,
+      distanciaKm: f.distanciaKm,
+      valorFormatado: formatBRL(f.valor),
+      dataFormatada: formatDate(f.data),
+      valorMinimoAnttFormatado: formatBRL(f.valorMinimoAntt),
+    }));
+  }
+}
+```
+
+**Step 3: UI recebe ViewModel com strings prontas**
+```typescript
+// src/app/fretes/page.tsx
+import { listarFretesAction } from "@/app/_actions/fretes/listar";
+
+export default async function FretesPage() {
+  const fretes = await listarFretesAction();
+
+  return (
+    <ul>
+      {fretes.map(f => (
+        <li key={f.id}>
+          <strong>{f.origem} → {f.destino}</strong>
+          <p>Valor: {f.valorFormatado}</p>               {/* ← Já formatado */}
+          <p>Data: {f.dataFormatada}</p>                 {/* ← Já formatado */}
+          <p>{f.distanciaKm} km</p>                      {/* ← número puro */}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### 16.6 Proibições na Camada de Apresentação
+
+❌ **Nunca faça isso em components, pages, ou actions:**
+
+```typescript
+// ❌ Importar funções de formatação
+import { formatBRL } from "@/utils/moeda";
+
+// ❌ Usar Intl.* diretamente
+new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor)
+
+// ❌ Chamar métodos de formatação em Date
+date.toLocaleString('pt-BR')
+date.toLocaleDateString('pt-BR')
+
+// ❌ Usar toFixed() ou toString() para moeda
+valor.toFixed(2)
+
+// ❌ Usar libraries de formatação (date-fns, moment, etc.) em UI
+import { format } from 'date-fns';
+format(date, 'dd/MM/yyyy')
+
+// ❌ Transformar dados dentro de map() ou render
+<span>{new Date(frete.data).toLocaleDateString('pt-BR')}</span>
+```
+
+### 16.7 Funções de Formatação Disponíveis
+
+**Em `@/utils/moeda.ts`:**
+```typescript
+formatBRL(value: number | { toNumber(): number } | null | undefined): string
+```
+Formata valores em BRL usando `Intl.NumberFormat('pt-BR')`.
+
+**Em `@/utils/data.ts`:**
+```typescript
+formatDate(value: Date | string | null | undefined): string
+formatDateTime(value: Date | string | null | undefined): string
+parseDate(value: unknown): Date | null
+parsePlainIsoDate(value: string): Date
+```
+
+Todas as funções de data respeitam o timezone `America/Sao_Paulo` (UTC-3).
+
+### 16.8 Validação Final
+
+Após implementar formatação, valide:
+
+- [ ] Nenhum `Intl.` em `src/app/**`, `src/_components/**`, `src/_actions/**`
+- [ ] Nenhum `formatBRL` ou `formatDate` importado fora de Core/Handlers
+- [ ] Todos os handlers retornam ViewModels com sufixo `Formatado` para strings
+- [ ] UI exibe apenas campos `Formatado` (numéricos puros sem transformação)
+- [ ] Mensagens de erro do Core em português (pt-BR)
+- [ ] Testes do Core validam formatação; testes de UI validam apenas exibição
+
 *This file is intended for agentic and human development use. Keep it updated as the project evolves.*
+
