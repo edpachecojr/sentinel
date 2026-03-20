@@ -9,7 +9,7 @@ export default function LoginPage() {
         <div className="relative h-10 w-52">
           <Image
             src="/images/logo/auth-logo.svg"
-            alt="NeoAgenda"
+            alt="MeuCargueiro"
             fill
             className="object-contain"
             priority

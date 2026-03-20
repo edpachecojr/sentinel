@@ -1,11 +1,11 @@
 ---
-name: playwright-e2e-neoagenda
-description: Executa testes funcionais end-to-end na aplicação NeoAgenda usando o Playwright MCP Server. Capaz de abrir o navegador, criar um usuário, concluir o onboarding e cadastrar um paciente completo. Use quando o usuário pedir para "testar", "validar o fluxo", "abrir o navegador e cadastrar", "rodar o teste E2E" ou qualquer variação de teste funcional manual na aplicação.
+name: playwright-e2e-lightning
+description: Executa testes funcionais end-to-end na aplicação Lightining usando o Playwright MCP Server. Capaz de abrir o navegador, criar um usuário, concluir o onboarding e cadastrar um paciente completo. Use quando o usuário pedir para "testar", "validar o fluxo", "abrir o navegador e cadastrar", "rodar o teste E2E" ou qualquer variação de teste funcional manual na aplicação.
 ---
 
-# Playwright E2E — NeoAgenda
+# Playwright E2E — Lightning
 
-Skill independente para testes funcionais end-to-end da aplicação NeoAgenda via Playwright MCP Server.
+Skill independente para testes funcionais end-to-end da aplicação Lightning via Playwright MCP Server.
 
 ## Pré-requisitos
 
@@ -23,7 +23,7 @@ Use estes dados (ou gere variações únicas com timestamp para evitar conflito 
 
 ```
 nome:         Automatizado E2E
-email:        e2e+<timestamp>@neoagenda.dev   (ex: e2e+1742000000@neoagenda.dev)
+email:        e2e+<timestamp>@lightning.dev   (ex: e2e+1742000000@lightning.dev)
 senha:        Senha@12345
 displayName:  Dra. Ana Lima
 orgName:      Clínica E2E

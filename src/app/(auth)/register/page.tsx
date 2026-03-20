@@ -9,7 +9,7 @@ export default function RegisterPage() {
         <div className="relative h-10 w-52">
           <Image
             src="/images/logo/auth-logo.svg"
-            alt="NeoAgenda"
+            alt="MeuCargueiro"
             fill
             className="object-contain"
             priority
@@ -20,7 +20,7 @@ export default function RegisterPage() {
           Crie sua conta
         </h1>
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Insira seus dados para começar a usar NeoAgenda
+          Insira seus dados para começar a usar MeuCargueiro
         </p>
       </header>
 
