@@ -64,7 +64,6 @@ function buildOnboardingRedirect(request: NextRequest): NextResponse {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
   if (isStaticAssetPath(pathname)) {
     return NextResponse.next();
   }
