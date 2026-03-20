@@ -1,13 +1,14 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { cn } from "@/app/_lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   className?: string;
   children: React.ReactNode;
-  showCloseButton?: boolean; // New prop to control close button visibility
-  isFullscreen?: boolean; // Default to false for backwards compatibility
+  showCloseButton?: boolean;
+  isFullscreen?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -15,10 +16,23 @@ export const Modal: React.FC<ModalProps> = ({
   onClose,
   children,
   className,
-  showCloseButton = true, // Default to true for backwards compatibility
+  showCloseButton = true,
   isFullscreen = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    }
+  }, [isOpen]);
+
+  const handleAnimationEnd = () => {
+    if (!isOpen) {
+      setShouldRender(false);
+    }
+  };
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -48,14 +62,20 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!shouldRender && !isOpen) return null;
 
   const contentClasses = isFullscreen
     ? "w-full h-full"
-    : "relative w-full rounded-3xl bg-white  dark:bg-gray-900";
+    : "relative w-full rounded-3xl bg-white dark:bg-gray-900 shadow-xl mx-4 sm:mx-0";
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999">
+    <div
+      className={cn(
+        "fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999 p-4 sm:p-6",
+        isOpen ? "animate-in fade-in duration-200" : "animate-out fade-out duration-200"
+      )}
+      onAnimationEnd={handleAnimationEnd}
+    >
       {!isFullscreen && (
         <div
           className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[2px]"
@@ -64,7 +84,13 @@ export const Modal: React.FC<ModalProps> = ({
       )}
       <div
         ref={modalRef}
-        className={`${contentClasses}  ${className}`}
+        className={cn(
+          contentClasses,
+          isOpen
+            ? "animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-300"
+            : "animate-out fade-out zoom-out-95 slide-out-to-bottom-4 duration-200",
+          className
+        )}
         onClick={(e) => e.stopPropagation()}
       >
         {showCloseButton && (
