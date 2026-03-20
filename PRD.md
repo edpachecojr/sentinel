@@ -1,4 +1,4 @@
-# PRD: MeuCargueiro — Plataforma de Gestão para Motoristas Autônomos
+# PRD: Falcon — Plataforma de Gestão para Motoristas Autônomos
 
 **Última Atualização:** 19 de março de 2026  
 **Status:** Em Definição  
@@ -11,7 +11,7 @@
 
 ### Visão do Produto
 
-**MeuCargueiro** é uma plataforma web moderna e intuitiva que capacita motoristas autônomos a gerenciar todos os aspectos do seu negócio — desde frota de veículos até análise financeira — de forma simples, sem burocracia e acessível via dispositivos móveis.
+**Falcon** é uma plataforma web moderna e intuitiva que capacita motoristas autônomos a gerenciar todos os aspectos do seu negócio — desde frota de veículos até análise financeira — de forma simples, sem burocracia e acessível via dispositivos móveis.
 
 ### Usuários-Alvo
 
@@ -127,12 +127,12 @@ Motoristas autônomos enfrentam **ineficiência operacional e incerteza financei
   - Premium em serviços de terceiros (seguros, peças, combustível)
 
 #### **Cenário Competitivo**
-| Solução | Pontos Fortes | Pontos Fracos | Diferencial MeuCargueiro |
+| Solução | Pontos Fortes | Pontos Fracos | Diferencial Falcon |
 |---------|---------------|---------------|-------------------------|
 | Planilhas Excel/Sheets | Flexível, zero custo | Desorganizado, inseguro | Organização automática |
 | App de ERP genérico | Completo, robusto | Interface complexa, não mobile-first | UX simplificada para motorista |
 | Sistemas de dispatch (Uber Freight, etc) | Integrado com fretes | Não oferece gestão operacional completa | Gestão independente + cálculo ANTT |
-| **MeuCargueiro** | Mobile-first, ANTT integrado, simples | Focado, não genérico | ✅ Solução especializada para motoristas |
+| **Falcon** | Mobile-first, ANTT integrado, simples | Focado, não genérico | ✅ Solução especializada para motoristas |
 
 ### Critérios de Sucesso
 
@@ -307,7 +307,7 @@ Critérios de Aceitação:
 
 Definição de Concluído:
 - [ ] Performance: carregamento < 1s mesmo com 500+ fretes
-- [ ] Relatório em PDF profissional, com logo MeuCargueiro
+- [ ] Relatório em PDF profissional, com logo Falcon
 ```
 
 #### **Épico 3: Registro de Fretes**
@@ -498,7 +498,7 @@ Para: usar para negociar com clientes, apresentar ao contador, entender o negóc
 
 Critérios de Aceitação:
 - [ ] Botão "Exportar Relatório" discreto no dashboard financeiro
-- [ ] Formato: PDF com branding MeuCargueiro
+- [ ] Formato: PDF com branding Falcon
 - [ ] Conteúdo: período selecionado, receita total, breakdown de despesas, gráficos, liquído
 - [ ] Profissional, mas acessível (não muito técnico)
 - [ ] Pode ser salvo/compartilhado
@@ -653,7 +653,7 @@ Diferenciadoras a longo prazo, complexidade alta.
 #### **Modelo de Dados Principal**
 
 ```sql
--- Users (melhorado com campos MeuCargueiro)
+-- Users (melhorado com campos Falcon)
 User
   id (uuid)
   email (string, unique)

@@ -1,12 +1,12 @@
-# AGENTS.md — Agentic Development Guidelines for MeuCargueiro
+# AGENTS.md — Agentic Development Guidelines for Falcon
 
-Welcome, agent. This document outlines the technical standards, architectural patterns, and development workflows for the `MeuCargueiro` project. Adhere strictly to these guidelines.
+Welcome, agent. This document outlines the technical standards, architectural patterns, and development workflows for the `Falcon` project. Adhere strictly to these guidelines.
 
 ---
 
 ## 1. Project Context
 
-`MeuCargueiro` is a SaaS platform for autonomous truck drivers and small fleet owners to manage their business operations. It centralizes freight logging, ANTT legal fare calculation, vehicle maintenance, fuel control, and financial dashboards. Designed for individual truck drivers operating solo or managing small fleets (1–20 vehicles).
+`Falcon` is a SaaS platform for autonomous truck drivers and small fleet owners to manage their business operations. It centralizes freight logging, ANTT legal fare calculation, vehicle maintenance, fuel control, and financial dashboards. Designed for individual truck drivers operating solo or managing small fleets (1–20 vehicles).
 
 - **Runtime**: Node.js (Vercel / Edge Functions)
 - **Language**: TypeScript 5+ (Strict)
@@ -57,7 +57,7 @@ pnpm prisma studio               # Open Prisma Studio GUI
 
 ## 3. Architecture & Layer Rules
 
-MeuCargueiro uses a strict 4-layer architecture. Respect import boundaries — violations cause coupling and security issues.
+Falcon uses a strict 4-layer architecture. Respect import boundaries — violations cause coupling and security issues.
 
 ```
 UI Layer (Components + Pages)
@@ -119,7 +119,7 @@ Lib / Infrastructure ← src/lib/**  — auth, db, session, logger
 
 ## 4. Multi-Tenancy Rules
 
-Every business entity in MeuCargueiro is scoped to an `Organizacao`. This is the core security boundary.
+Every business entity in Falcon is scoped to an `Organizacao`. This is the core security boundary.
 
 - **All** database queries on business models (`Veiculo`, `Frete`, `RegistroAbastecimento`, `RegistroManutencao`, `DespesaGeral`) **must** include `organizacaoId` in the `where` clause.
 - The `organizacaoId` is sourced from `sessionService.requireOrgSession()` in the Action layer and passed down explicitly.
@@ -743,7 +743,7 @@ vi.mock("@/infrastructure/services/autenticacao/AutenticacaoServico");
 
 ## 14. Arquitetura de Três Camadas (Padrão Evolutivo)
 
-> Esta seção define a arquitetura-alvo do MeuCargueiro. Todo código **novo** deve seguir estes padrões rigorosamente. Ao tocar em código **existente**, avalie se faz sentido refatorar para esta arquitetura — especialmente quando o trecho for complexo ou estiver sendo alterado significativamente.
+> Esta seção define a arquitetura-alvo do Falcon. Todo código **novo** deve seguir estes padrões rigorosamente. Ao tocar em código **existente**, avalie se faz sentido refatorar para esta arquitetura — especialmente quando o trecho for complexo ou estiver sendo alterado significativamente.
 
 ### 14.1 Visão Geral
 
