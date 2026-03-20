@@ -1,4 +1,4 @@
-import type { IAutenticacaoServico } from "@/core/auth/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
 import type { AutenticarUsuarioDto } from "./dtos/AutenticarUsuarioDto";
 import type { AutenticarUsuarioResultado } from "./dtos/AutenticarUsuarioResultado";
 

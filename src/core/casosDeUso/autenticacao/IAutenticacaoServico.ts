@@ -1,8 +1,8 @@
-import Usuario from "../models/Usuario";
+import Usuario from "../../models/Usuario";
 import type { RegistrarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
-import type { RegistrarUsuarioResultado } from "../casosDeUso/autenticacao/dtos/RegistrarUsuarioResultado";
-import type { AutenticarUsuarioDto } from "../casosDeUso/autenticacao/dtos/AutenticarUsuarioDto";
-import type { AutenticarUsuarioResultado } from "../casosDeUso/autenticacao/dtos/AutenticarUsuarioResultado";
+import type { RegistrarUsuarioResultado } from "./dtos/RegistrarUsuarioResultado";
+import type { AutenticarUsuarioDto } from "./dtos/AutenticarUsuarioDto";
+import type { AutenticarUsuarioResultado } from "./dtos/AutenticarUsuarioResultado";
 
 export interface IAutenticacaoServico {
   autenticar(dto: AutenticarUsuarioDto): Promise<AutenticarUsuarioResultado>;

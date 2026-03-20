@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { AutenticarUsuarioUseCase } from "@/core/casosDeUso/autenticacao/AutenticarUsuario";
-import type { IAutenticacaoServico } from "@/core/auth/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
 import type { AutenticarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/AutenticarUsuarioDto";
 
 describe("AutenticarUsuarioUseCase", () => {

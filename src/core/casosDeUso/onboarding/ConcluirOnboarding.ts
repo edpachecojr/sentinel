@@ -1,4 +1,4 @@
-import type { IOnboardingServico } from "@/core/onboarding/IOnboardingServico";
+import type { IOnboardingServico } from "@/core/casosDeUso/onboarding/IOnboardingServico";
 import type { ConcluirOnboardingDto } from "./dtos/ConcluirOnboardingDto";
 import type { ConcluirOnboardingResultado } from "./dtos/ConcluirOnboardingResultado";
 

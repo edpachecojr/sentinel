@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { ConcluirOnboardingUseCase } from "@/core/casosDeUso/onboarding/ConcluirOnboarding";
-import type { IOnboardingServico } from "@/core/onboarding/IOnboardingServico";
+import type { IOnboardingServico } from "@/core/casosDeUso/onboarding/IOnboardingServico";
 import type { ConcluirOnboardingDto } from "@/core/casosDeUso/onboarding/dtos/ConcluirOnboardingDto";
 
 describe("ConcluirOnboardingUseCase", () => {

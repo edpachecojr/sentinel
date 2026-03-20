@@ -1,6 +1,6 @@
 import { prisma } from "@/infrastructure/lib/db";
 import { generateId } from "@/utils/uuid";
-import type { IOnboardingServico } from "@/core/onboarding/IOnboardingServico";
+import type { IOnboardingServico } from "@/core/casosDeUso/onboarding/IOnboardingServico";
 import type { ConcluirOnboardingDto } from "@/core/casosDeUso/onboarding/dtos/ConcluirOnboardingDto";
 import type { ConcluirOnboardingResultado } from "@/core/casosDeUso/onboarding/dtos/ConcluirOnboardingResultado";
 

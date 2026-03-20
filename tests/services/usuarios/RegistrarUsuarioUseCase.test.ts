@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { RegistrarUsuarioUseCase } from "@/core/casosDeUso/autenticacao/RegistrarUsuario";
-import type { IAutenticacaoServico } from "@/core/auth/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
 import type { RegistrarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
 
 describe("RegistrarUsuarioUseCase", () => {

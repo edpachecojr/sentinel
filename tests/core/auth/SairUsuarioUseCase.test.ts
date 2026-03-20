@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { SairUsuarioUseCase } from "@/core/casosDeUso/autenticacao/SairUsuario";
-import type { IAutenticacaoServico } from "@/core/auth/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
 
 describe("SairUsuarioUseCase", () => {
   it("should call sair() on the authentication service", async () => {
