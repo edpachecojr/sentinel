@@ -1,14 +1,17 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { sessionService } from "@/infrastructure/services/SessionService";
-import { concluirOnboardingCommand } from "@/core/casosDeUso/onboarding/commands/ConcluirOnboardingCommand";
-import { ConcluirOnboardingCommandHandler } from "@/core/casosDeUso/onboarding/handlers/ConcluirOnboardingCommandHandler";
-import { ConcluirOnboardingUseCase } from "@/core/casosDeUso/onboarding/ConcluirOnboarding";
-import { OnboardingServico } from "@/core/casosDeUso/onboarding/OnboardingServico";
+import { ConcluirOnboardingHandler } from "@/core/casosDeUso/onboarding/concluirOnboardingHandler";
 import { PrismaUnitOfWork } from "@/infrastructure/services/onboarding/PrismaUnitOfWork";
 import { PrismaOrganizacaoRepositorio } from "@/infrastructure/repositories/PrismaOrganizacaoRepositorio";
 import { PrismaUsuarioRepositorio } from "@/infrastructure/repositories/PrismaUsuarioRepositorio";
+
+const schema = z.object({
+  orgName: z.string().min(1, { message: "Nome da organização é obrigatório" }),
+  displayName: z.string().min(1, { message: "Nome de exibição é obrigatório" }),
+});
 
 export type EstadoOnboarding =
   | { success: true; organizacaoId: string }
@@ -17,7 +20,7 @@ export type EstadoOnboarding =
 export async function completeOnboarding(data: unknown): Promise<EstadoOnboarding> {
   const user = await sessionService.requireUser();
 
-  const parsed = concluirOnboardingCommand.safeParse(data);
+  const parsed = schema.safeParse(data);
   if (!parsed.success) {
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
@@ -27,15 +30,13 @@ export async function completeOnboarding(data: unknown): Promise<EstadoOnboardin
   const organizacaoRepo = new PrismaOrganizacaoRepositorio();
   const usuarioRepo = new PrismaUsuarioRepositorio();
 
-  const onboardingServico = new OnboardingServico(uow, organizacaoRepo, usuarioRepo);
-  const useCase = new ConcluirOnboardingUseCase(onboardingServico);
-  const handler = new ConcluirOnboardingCommandHandler(useCase);
+  const handler = new ConcluirOnboardingHandler(uow, organizacaoRepo, usuarioRepo);
 
-  const resultado = await handler.handle(user.id, parsed.data);
-
-  if (!resultado.success) {
-    return { success: false, error: resultado.error };
+  try {
+    const resultado = await handler.executar(user.id, parsed.data);
+    redirect("/dashboard");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Erro ao completar onboarding";
+    return { success: false, error: message };
   }
-
-  redirect("/dashboard");
 }
