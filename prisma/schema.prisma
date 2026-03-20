@@ -78,7 +78,7 @@ model Verification {
   @@map("verification")
 }
 
-// ─── Business Models (Falcon) ──────────────────────────────────────────
+// ─── Business Models (Sentinel) ──────────────────────────────────────────
 
 model Organizacao {
   id           String           @id @default(uuid())

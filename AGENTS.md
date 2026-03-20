@@ -6,7 +6,7 @@ Welcome, agent. This document outlines the technical standards, architectural pa
 
 ## 1. Project Context
 
-`Falcon` is a SaaS platform for autonomous truck drivers and small fleet owners to manage their business operations. It centralizes freight logging, ANTT legal fare calculation, vehicle maintenance, fuel control, and financial dashboards. Designed for individual truck drivers operating solo or managing small fleets (1–20 vehicles).
+`Sentinel` is a modern fullstack boilerplate built with Next.js, TypeScript, Tailwind CSS, and Better Auth. It provides a production-ready foundation for building scalable SaaS applications with secure authentication, multi-tenancy support, 4-layer architecture, and comprehensive development standards.
 
 - **Runtime**: Node.js (Vercel / Edge Functions)
 - **Language**: TypeScript 5+ (Strict)
@@ -57,7 +57,7 @@ pnpm prisma studio               # Open Prisma Studio GUI
 
 ## 3. Architecture & Layer Rules
 
-Falcon uses a strict 4-layer architecture. Respect import boundaries — violations cause coupling and security issues.
+Sentinel uses a strict 4-layer architecture. Respect import boundaries — violations cause coupling and security issues.
 
 ```
 UI Layer (Components + Pages)
@@ -119,7 +119,7 @@ Lib / Infrastructure ← src/lib/**  — auth, db, session, logger
 
 ## 4. Multi-Tenancy Rules
 
-Every business entity in Falcon is scoped to an `Organizacao`. This is the core security boundary.
+Every business entity in Sentinel is scoped to an `Organizacao`. This is the core security boundary.
 
 - **All** database queries on business models (`Veiculo`, `Frete`, `RegistroAbastecimento`, `RegistroManutencao`, `DespesaGeral`) **must** include `organizacaoId` in the `where` clause.
 - The `organizacaoId` is sourced from `sessionService.requireOrgSession()` in the Action layer and passed down explicitly.
@@ -743,7 +743,7 @@ vi.mock("@/infrastructure/services/autenticacao/AutenticacaoServico");
 
 ## 14. Arquitetura de Três Camadas (Padrão Evolutivo)
 
-> Esta seção define a arquitetura-alvo do Falcon. Todo código **novo** deve seguir estes padrões rigorosamente. Ao tocar em código **existente**, avalie se faz sentido refatorar para esta arquitetura — especialmente quando o trecho for complexo ou estiver sendo alterado significativamente.
+> Esta seção define a arquitetura-alvo do Sentinel. Todo código **novo** deve seguir estes padrões rigorosamente. Ao tocar em código **existente**, avalie se faz sentido refatorar para esta arquitetura — especialmente quando o trecho for complexo ou estiver sendo alterado significativamente.
 
 ### 14.1 Visão Geral
 

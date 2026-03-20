@@ -1,4 +1,4 @@
-# Copilot Instructions for Falcon
+# Copilot Instructions for Sentinel
 
 > **Nota:** Este arquivo orienta o comportamento do GitHub Copilot / assistente AI para este repositório.
 

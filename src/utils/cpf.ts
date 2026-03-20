@@ -1,5 +1,5 @@
 /**
- * CPF (Cadastro de Pessoas Físicas) validation utilities for Falcon
+ * CPF (Cadastro de Pessoas Físicas) validation utilities for Sentinel
  *
  * USAGE IN ZOD SCHEMAS:
  * ======================

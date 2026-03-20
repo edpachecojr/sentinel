@@ -1,5 +1,5 @@
 /**
- * Date utility functions for Falcon
+ * Date utility functions for Sentinel
  *
  * These functions provide timezone-aware date parsing and formatting,
  * essential for serializing Prisma Date fields across timezones.
