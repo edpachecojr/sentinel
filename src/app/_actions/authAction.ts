@@ -5,9 +5,9 @@ import {
   sessionService,
   UnauthenticatedError,
   InactiveUserError,
-} from "@/infrastructure/services/SessionService";
-import { logger } from "@/infrastructure/lib/logger";
-import type { Session, AuthUser } from "@/infrastructure/services/SessionService";
+} from "@/infra/services/SessionService";
+import { logger } from "@/infra/lib/logger";
+import type { Session, AuthUser } from "@/infra/services/SessionService";
 
 type ValidSession = {
   session: NonNullable<Session>["session"];

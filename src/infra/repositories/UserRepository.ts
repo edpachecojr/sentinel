@@ -1,4 +1,4 @@
-import { prisma } from "@/infrastructure/lib/db";
+import { prisma } from "@/infra/db/prismaClient";
 
 export type UpdateUserData = {
   displayName?: string;

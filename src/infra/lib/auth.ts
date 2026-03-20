@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "@/infrastructure/lib/db";
+import { prisma } from "@/infra/db/prismaClient";
 import { generateId } from "@/utils/uuid";
-import { logger } from "@/infrastructure/lib/logger";
+import { logger } from "@/infra/lib/logger";
 
 const cookieName = process.env.BETTER_AUTH_COOKIE_NAME;
 const cookiePrefix = process.env.BETTER_AUTH_COOKIE_PREFIX;

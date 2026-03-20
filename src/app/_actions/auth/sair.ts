@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from 'next/navigation';
-import { AutenticacaoServico } from '@/infrastructure/services/autenticacao/AutenticacaoServico';
+import { AutenticacaoServico } from '@/infra/services/autenticacao/AutenticacaoServico';
 import { SairHandler } from '@/core/casosDeUso/autenticacao/sairHandler';
 
 export type EstadoSair =

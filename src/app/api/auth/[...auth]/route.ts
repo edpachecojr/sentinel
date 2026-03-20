@@ -1,4 +1,4 @@
-import { auth } from "@/infrastructure/lib/auth";
+import { auth } from "@/infra/lib/auth";
 
 const handler = auth.handler;
 

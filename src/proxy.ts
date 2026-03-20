@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { auth, type Session } from "@/infrastructure/lib/auth";
-import { logger } from "@/infrastructure/lib/logger";
+import { auth, type Session } from "@/infra/lib/auth";
+import { logger } from "@/infra/lib/logger";
 
 type WhenAuthenticated = "next" | "redirect";
 

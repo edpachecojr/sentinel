@@ -4,7 +4,7 @@ import type { IUsuarioRepositorio } from "@/core/abstraction/repositories/IUsuar
 import type { ConcluirOnboardingCommand, ConcluirOnboardingResult } from "./concluirOnboarding.command";
 import { generateId } from "@/utils/uuid";
 import { generateSlug } from "@/utils/slug";
-import { logger } from "@/infrastructure/lib/logger";
+import { logger } from "@/infra/lib/logger";
 
 export class ConcluirOnboardingHandler {
   constructor(

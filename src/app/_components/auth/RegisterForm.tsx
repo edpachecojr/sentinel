@@ -9,7 +9,7 @@ import Label from "@/components/form/Label";
 import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
-import { logger } from "@/infrastructure/lib/logger";
+import { logger } from "@/infra/lib/logger";
 import { registrarUsuarioAction } from "@/app/_actions/auth/registrarUsuario";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { z } from "zod";

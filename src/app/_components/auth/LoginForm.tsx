@@ -10,7 +10,7 @@ import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import { autenticarUsuarioAction } from "@/app/_actions/auth/autenticarUsuario";
-import { logger } from "@/infrastructure/lib/logger";
+import { logger } from "@/infra/lib/logger";
 
 export function LoginForm() {
   const router = useRouter();

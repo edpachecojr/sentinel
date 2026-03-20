@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, startTransition } from "react";
-import { useSession } from "@/infrastructure/lib/auth-client";
-import { logger } from "@/infrastructure/lib/logger";
+import { useSession } from "@/infra/lib/auth-client";
+import { logger } from "@/infra/lib/logger";
 import { sairAction } from "@/app/_actions/auth/sair";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";

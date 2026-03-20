@@ -1,4 +1,4 @@
-import { prisma } from "@/infrastructure/lib/db";
+import { prisma } from "@/infra/db/prismaClient";
 import type { IUnitOfWork } from "@/core/abstraction/IUnitOfWork";
 
 export class PrismaUnitOfWork implements IUnitOfWork {

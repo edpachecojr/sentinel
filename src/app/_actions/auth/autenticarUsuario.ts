@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from 'zod';
-import { AutenticacaoServico } from '@/infrastructure/services/autenticacao/AutenticacaoServico';
+import { AutenticacaoServico } from '@/infra/services/autenticacao/AutenticacaoServico';
 import { AutenticarUsuarioHandler } from '@/core/casosDeUso/autenticacao/autenticarUsuarioHandler';
 
 export type EstadoAutenticacao =

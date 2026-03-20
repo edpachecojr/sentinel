@@ -2,11 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { sessionService } from "@/infrastructure/services/SessionService";
+import { sessionService } from "@/infra/services/SessionService";
 import { ConcluirOnboardingHandler } from "@/core/casosDeUso/onboarding/concluirOnboardingHandler";
-import { PrismaUnitOfWork } from "@/infrastructure/services/onboarding/PrismaUnitOfWork";
-import { PrismaOrganizacaoRepositorio } from "@/infrastructure/repositories/PrismaOrganizacaoRepositorio";
-import { PrismaUsuarioRepositorio } from "@/infrastructure/repositories/PrismaUsuarioRepositorio";
+import { PrismaUnitOfWork } from "@/infra/unitOfWork/PrismaUnitOfWork";
+import { PrismaOrganizacaoRepositorio } from "@/infra/repositories/PrismaOrganizacaoRepositorio";
+import { PrismaUsuarioRepositorio } from "@/infra/repositories/PrismaUsuarioRepositorio";
 
 const schema = z.object({
   orgName: z.string().min(1, { message: "Nome da organização é obrigatório" }),

@@ -1,4 +1,4 @@
-import { prisma } from "@/infrastructure/lib/db";
+import { prisma } from "@/infra/db/prismaClient";
 import type { PrismaClient } from "@/generated/prisma/client";
 import type { IUsuarioRepositorio, AtualizarUsuarioDto } from "@/core/abstraction/repositories/IUsuarioRepositorio";
 

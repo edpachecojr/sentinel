@@ -1,4 +1,4 @@
-import { auth } from "@/infrastructure/lib/auth";
+import { auth } from "@/infra/lib/auth";
 import { headers } from "next/headers";
 import type { IAutenticacaoServico, RegistrarUsuarioParams, RegistrarUsuarioResultado, AutenticarUsuarioParams, AutenticarUsuarioResultado } from "@/core/abstraction/servicos/IAutenticacaoServico";
 import { AuthenticationError } from "@/core/abstraction/errors/auth";

@@ -1,6 +1,6 @@
 "use server";
 
-import { sessionService } from "@/infrastructure/services/SessionService";
+import { sessionService } from "@/infra/services/SessionService";
 
 export async function getOrganizationName(): Promise<string | null> {
   const organizacao = await sessionService.obterOrganizacao();
