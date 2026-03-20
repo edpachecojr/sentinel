@@ -1,5 +1,6 @@
-import { auth } from "@/infra/lib/auth";
 import { headers } from "next/headers";
+
+import { auth } from "@/infra/lib/auth";
 import type {
   IAutenticacaoServico,
   RegistrarUsuarioParams,
@@ -10,7 +11,7 @@ import type {
   UsuarioAutenticado,
   OrganizacaoData,
 } from "@/core/abstraction/servicos/IAutenticacaoServico";
-import { AuthenticationError, UnauthenticatedError, InactiveUserError } from "@/core/abstraction/errors/auth";
+import { AuthenticationError, UnauthenticatedError } from "@/core/abstraction/errors/auth";
 import type { IOrganizacaoRepositorio } from "@/core/abstraction/repositories/IOrganizacaoRepositorio";
 
 export class AutenticacaoServico implements IAutenticacaoServico {

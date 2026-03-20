@@ -9,77 +9,44 @@
  * - Actions: await obterUsuario() para validação
  */
 
-import { auth } from "@/infra/lib/auth";
-import { headers } from "next/headers";
-import { UnauthenticatedError } from "@/core/abstraction/errors/auth";
-import type { UsuarioAutenticado, SessaoAutenticada } from "@/core/abstraction/servicos/IAutenticacaoServico";
-import { prisma } from "@/infra/db/prismaClient";
+import type { UsuarioAutenticado, SessaoAutenticada, OrganizacaoData } from "@/core/abstraction/servicos/IAutenticacaoServico";
+import { AutenticacaoServico } from "@/infra/services/autenticacao/AutenticacaoServico";
+import { PrismaOrganizacaoRepositorio } from "@/infra/repositories/PrismaOrganizacaoRepositorio";
 
 /**
- * Lê a sessão bruta do auth.api.getSession
+ * Cria uma instância do serviço de autenticação com dependências
+ * Encapsula a instanciação para manter DI e estabilidade arquitetural
+ */
+function criarAutenticacaoServico(): AutenticacaoServico {
+  const organizacaoRepository = new PrismaOrganizacaoRepositorio();
+  return new AutenticacaoServico(organizacaoRepository);
+}
+
+/**
+ * Obtém a sessão do usuário autenticado
+ * Delega para AutenticacaoServico para centralizar lógica de better-auth
  * Retorna null se não autenticado
  */
 export async function obterSessao(): Promise<SessaoAutenticada | null> {
-  const headersList = await headers();
-  const session = await auth.api.getSession({
-    headers: headersList,
-  });
-
-  if (!session?.user || !session?.session) {
-    return null;
-  }
-
-  return {
-    sessao: session.session,
-    usuario: {
-      id: session.user.id,
-      email: session.user.email,
-      nome: session.user.name,
-      displayName: session.user.name,
-      onboardingCompleted: session.user.onboardingCompleted as boolean | undefined,
-      organizacaoId: session.user.organizacaoId as string | undefined,
-    },
-  };
+  const servico = criarAutenticacaoServico();
+  return servico.obterSessao();
 }
 
 /**
  * Obtém o usuário autenticado ou lança UnauthenticatedError
- * Usa obterSessao internamente
+ * Delega para AutenticacaoServico
  */
 export async function obterUsuario(): Promise<UsuarioAutenticado> {
-  const sessao = await obterSessao();
-
-  if (!sessao?.usuario) {
-    throw new UnauthenticatedError();
-  }
-
-  return {
-    id: sessao.usuario.id,
-    email: sessao.usuario.email,
-    nome: sessao.usuario.nome,
-    displayName: sessao.usuario.displayName,
-    onboardingCompleted: sessao.usuario.onboardingCompleted,
-    organizacaoId: sessao.usuario.organizacaoId,
-  };
+  const servico = criarAutenticacaoServico();
+  return servico.obterUsuario();
 }
 
 /**
  * Obtém a organização do usuário autenticado
+ * Delega para AutenticacaoServico, que encapsula acesso ao banco
  * Retorna null se não autenticado ou sem organizacaoId
  */
-export async function obterOrganizacao(): Promise<{ id: string; nome: string } | null> {
-  try {
-    const usuario = await obterUsuario();
-
-    if (!usuario.organizacaoId) {
-      return null;
-    }
-
-    return await prisma.organizacao.findFirst({
-      where: { id: usuario.organizacaoId, deletadoEm: null },
-      select: { id: true, nome: true },
-    });
-  } catch {
-    return null;
-  }
+export async function obterOrganizacao(): Promise<OrganizacaoData | null> {
+  const servico = criarAutenticacaoServico();
+  return servico.obterOrganizacao();
 }
