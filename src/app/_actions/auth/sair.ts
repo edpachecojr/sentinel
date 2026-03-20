@@ -8,9 +8,9 @@ export type EstadoSair = { success: false; error: string };
 export async function sairAction(): Promise<EstadoSair> {
   try {
     await container.sairHandler.executar();
-    redirect('/login');
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Erro ao sair';
+    const message = error instanceof Error ? error.message : 'Erro ao encerrar sessão';
     return { success: false, error: message };
   }
+  redirect('/login');
 }
