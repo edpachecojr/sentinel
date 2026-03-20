@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/infrastructure/lib/db";
 import { generateId } from "@/utils/uuid";
@@ -74,6 +75,9 @@ export const auth = betterAuth({
       },
     },
   },
+  plugins: [
+    nextCookies(), // must be last — propagates Set-Cookie in server actions automatically
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;

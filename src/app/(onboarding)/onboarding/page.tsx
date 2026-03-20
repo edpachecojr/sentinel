@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { OnboardingContainer } from "@/components/onboarding/OnboardingContainer";
-import { completeOnboarding } from "@/actions/onboarding/complete";
-import { requireAuthOrRedirect } from "@/actions/authAction";
+import { completeOnboarding } from "@/app/_actions/onboarding/complete";
+import { requireAuthOrRedirect } from "@/app/_actions/authAction";
 
 function getInitialDisplayName(name: string | null | undefined, displayName?: string | null) {
   if (displayName?.trim()) {

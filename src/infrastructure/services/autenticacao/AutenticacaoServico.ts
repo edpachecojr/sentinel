@@ -1,5 +1,5 @@
 import { auth } from "@/infrastructure/lib/auth";
-import { headers, cookies } from "next/headers";
+import { headers } from "next/headers";
 import type { IAutenticacaoServico } from "@/core/auth/IAutenticacaoServico";
 import type { RegistrarUsuarioDto } from "../../../core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
 import type { RegistrarUsuarioResultado } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioResultado";
@@ -25,38 +25,19 @@ export class AutenticacaoServico implements IAutenticacaoServico {
   }
 
   async autenticar(dto: AutenticarUsuarioDto): Promise<AutenticarUsuarioResultado> {
-    const response = await auth.api.signInEmail({
+    const resultado = await auth.api.signInEmail({
       body: {
         email: dto.email,
         password: dto.senha,
       },
       headers: await headers(),
-      asResponse: true,
     });
 
-    if (!response.ok) {
+    if (!resultado?.user?.id) {
       throw new Error("Email ou senha incorretos.");
     }
 
-    const data = await response.json();
-    if (!data?.user?.id) {
-      throw new Error("Falha ao autenticar usuário.");
-    }
-
-    // Propaga cookies de sessão
-    const setCookie = response.headers.get("set-cookie");
-    if (setCookie) {
-      const cookieStore = await cookies();
-      for (const cookie of setCookie.split(", ")) {
-        const [nameValue] = cookie.split(";");
-        const [name, value] = nameValue.split("=");
-        if (name && value) {
-          cookieStore.set(name.trim(), value.trim(), { httpOnly: true, path: "/" });
-        }
-      }
-    }
-
-    return { usuarioId: data.user.id };
+    return { usuarioId: resultado.user.id };
   }
 
   async validarSessao(token: string): Promise<boolean> {
