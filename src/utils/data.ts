@@ -27,14 +27,24 @@
  *     proxima: z.string().optional().transform(d => d ? parseDate(d) : null),
  *   });
  *
- * Example - Server Component serialization:
- * ─────────────────────────────────────────
- *   // When fetching dates from Prisma in RSC, format before passing to client:
- *   const fretes = await db.frete.findMany({ where: { organizacaoId } });
+ * USAGE IN HANDLERS (CORRECT):
+ * ───────────────────────────
+ * ✅ CORRETO: Use in Core handlers — never in pages, actions, or components:
+ *   // In: src/core/casosDeUso/fretes/ListarFretesHandler.ts
+ *   async executar(organizacaoId) {
+ *     const fretes = await this.repository.listar(organizacaoId);
+ *     return fretes.map(f => ({
+ *       id: f.id,
+ *       dataFormatada: formatDate(f.data),    // ← format here in handler
+ *       // ...
+ *     }));
+ *   }
+ *
+ * ❌ ERRADO: Never in RSC/page.tsx:
+ *   // In: src/app/fretes/page.tsx
+ *   const fretes = await db.frete.findMany({...});
  *   return fretes.map(f => ({
- *     ...f,
- *     data: formatDate(f.data),      // → "15/01/2024"
- *     criadoEm: formatDateTime(f.criadoEm), // → "15/01/2024, 10:30"
+ *     data: formatDate(f.data), // NEVER do this in page
  *   }));
  *
  * TIMEZONE HANDLING:
