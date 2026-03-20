@@ -80,8 +80,8 @@ export function LoginForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Entrando..." : "Entrar"}
+      <Button type="submit" className="w-full" loading={isPending}>
+        Entrar
       </Button>
 
       <SocialAuthButtons isPending={isPending} />

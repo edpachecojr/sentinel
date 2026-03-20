@@ -161,8 +161,8 @@ export function RegisterForm() {
         />
       </div>
 
-      <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Criando conta..." : "Criar conta"}
+      <Button type="submit" className="w-full" loading={isPending}>
+        Criar conta
       </Button>
 
       <SocialAuthButtons isPending={isPending} />

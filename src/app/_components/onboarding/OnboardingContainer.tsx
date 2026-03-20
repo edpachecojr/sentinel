@@ -133,7 +133,8 @@ export function OnboardingContainer({
             <Button
               type="submit"
               variant="primary"
-              disabled={isPending || Boolean(displayNameError)}
+              disabled={Boolean(displayNameError)}
+              loading={isPending}
               className="flex-1"
             >
               Proximo
@@ -142,10 +143,11 @@ export function OnboardingContainer({
             <Button
               type="submit"
               variant="primary"
-              disabled={isPending || Boolean(orgNameError)}
+              disabled={Boolean(orgNameError)}
+              loading={isPending}
               className="flex-1"
             >
-              {isPending ? "Concluindo..." : "Concluir"}
+              Concluir
             </Button>
           )}
         </div>
