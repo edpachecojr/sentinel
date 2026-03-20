@@ -3,10 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { sessionService } from "@/infra/services/SessionService";
-import { ConcluirOnboardingHandler } from "@/core/casosDeUso/onboarding/concluirOnboardingHandler";
-import { PrismaUnitOfWork } from "@/infra/unitOfWork/PrismaUnitOfWork";
-import { PrismaOrganizacaoRepositorio } from "@/infra/repositories/PrismaOrganizacaoRepositorio";
-import { PrismaUsuarioRepositorio } from "@/infra/repositories/PrismaUsuarioRepositorio";
+import { container } from "@/container";
 
 const schema = z.object({
   orgName: z.string().min(1, { message: "Nome da organização é obrigatório" }),
@@ -25,15 +22,8 @@ export async function completeOnboarding(data: unknown): Promise<EstadoOnboardin
     return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
-  // Composition Root: Instancia toda a cadeia de dependências
-  const uow = new PrismaUnitOfWork();
-  const organizacaoRepo = new PrismaOrganizacaoRepositorio();
-  const usuarioRepo = new PrismaUsuarioRepositorio();
-
-  const handler = new ConcluirOnboardingHandler(uow, organizacaoRepo, usuarioRepo);
-
   try {
-    const resultado = await handler.executar(user.id, parsed.data);
+    const resultado = await container.concluirOnboardingHandler.executar(user.id, parsed.data);
     redirect("/dashboard");
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro ao completar onboarding";

@@ -1,8 +1,7 @@
 "use server";
 
 import { z } from 'zod';
-import { AutenticacaoServico } from '@/infra/services/autenticacao/AutenticacaoServico';
-import { AutenticarUsuarioHandler } from '@/core/casosDeUso/autenticacao/autenticarUsuarioHandler';
+import { container } from '@/container';
 
 export type EstadoAutenticacao =
   | { success: true; usuarioId: string }
@@ -22,10 +21,7 @@ export async function autenticarUsuarioAction(data: unknown): Promise<EstadoAute
     return { success: false, error: firstError ?? 'Dados inválidos' };
   }
 
-  const autenticacaoServico = new AutenticacaoServico();
-  const handler = new AutenticarUsuarioHandler(autenticacaoServico);
-
-  const resultado = await handler.executar({
+  const resultado = await container.autenticarUsuarioHandler.executar({
     email: parsed.data.email,
     senha: parsed.data.password,
   });

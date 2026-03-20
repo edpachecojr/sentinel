@@ -1,17 +1,18 @@
 "use server";
 
 import { redirect } from 'next/navigation';
-import { AutenticacaoServico } from '@/infra/services/autenticacao/AutenticacaoServico';
-import { SairHandler } from '@/core/casosDeUso/autenticacao/sairHandler';
+import { container } from '@/container';
 
 export type EstadoSair =
   | { success: true }
   | { success: false; error: string };
 
 export async function sairAction(): Promise<EstadoSair> {
-  const autenticacaoServico = new AutenticacaoServico();
-  const handler = new SairHandler(autenticacaoServico);
-
-  await handler.executar();
-  redirect('/login');
+  try {
+    await container.sairHandler.executar();
+    redirect('/login');
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro ao sair';
+    return { success: false, error: message };
+  }
 }

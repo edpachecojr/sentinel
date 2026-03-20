@@ -1,8 +1,7 @@
 "use server";
 
 import { z } from 'zod';
-import { AutenticacaoServico } from '@/infra/services/autenticacao/AutenticacaoServico';
-import { RegistrarUsuarioHandler } from '@/core/casosDeUso/autenticacao/registrarUsuarioHandler';
+import { container } from '@/container';
 
 export type EstadoRegistro =
   | { success: true; usuarioId: string }
@@ -24,10 +23,7 @@ export async function registrarUsuarioAction(data: unknown): Promise<EstadoRegis
     return { success: false, error: message };
   }
 
-  const autenticacaoServico = new AutenticacaoServico();
-  const handler = new RegistrarUsuarioHandler(autenticacaoServico);
-
-  const resultado = await handler.executar({
+  const resultado = await container.registrarUsuarioHandler.executar({
     nome: parsed.data.name,
     email: parsed.data.email,
     senha: parsed.data.password,
