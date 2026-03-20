@@ -26,7 +26,6 @@ const mockedPrisma = {
 };
 
 vi.mock("@/infra/db/prismaClient", () => ({ prisma: mockedPrisma }));
-vi.mock("@/infra/lib/db", () => ({ prisma: mockedPrisma })); // Backward compat alias
 
 // Mock server-only
 vi.mock("server-only", () => ({}));

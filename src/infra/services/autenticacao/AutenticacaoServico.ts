@@ -44,10 +44,6 @@ export class AutenticacaoServico implements IAutenticacaoServico {
     return { usuarioId: payload.user.id };
   }
 
-  async validarSessao(token: string): Promise<boolean> {
-    throw new Error("not implemented");
-  }
-
   async sair(): Promise<void> {
     const response = await auth.api.signOut({
       headers: await headers(),
@@ -57,10 +53,6 @@ export class AutenticacaoServico implements IAutenticacaoServico {
     if (!response.ok) {
       throw new AuthenticationError("Falha ao encerrar sessão.");
     }
-  }
-
-  async obterUsuarioPorToken(token: string): Promise<any> {
-    throw new Error("not implemented");
   }
 }
 

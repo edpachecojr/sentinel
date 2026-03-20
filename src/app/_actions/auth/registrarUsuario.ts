@@ -9,9 +9,13 @@ export type EstadoRegistro =
 
 export async function registrarUsuarioAction(data: unknown): Promise<EstadoRegistro> {
   const schema = z.object({
-    name: z.string().min(1, { message: 'Nome é obrigatório' }),
+    name: z.string().min(2, { message: 'Nome deve ter pelo menos 2 caracteres' }),
     email: z.string().email({ message: 'Email inválido' }),
     password: z.string().min(8, { message: 'A senha deve ter pelo menos 8 caracteres' }),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmPassword'],
   });
 
   const parsed = schema.safeParse(data);
