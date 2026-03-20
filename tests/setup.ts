@@ -14,17 +14,19 @@ vi.mock("next/navigation", () => ({
 }));
 
 // Mock Prisma client
-vi.mock("@/lib/db", () => ({
-  prisma: {
-    user: { create: vi.fn(), findUnique: vi.fn(), update: vi.fn(), delete: vi.fn() },
-    organizacao: { create: vi.fn(), findUnique: vi.fn() },
-    veiculo: { findMany: vi.fn(), create: vi.fn(), update: vi.fn() },
-    frete: { findMany: vi.fn(), create: vi.fn(), update: vi.fn() },
-    registroAbastecimento: { findMany: vi.fn(), create: vi.fn() },
-    registroManutencao: { findMany: vi.fn(), create: vi.fn() },
-    despesaGeral: { findMany: vi.fn(), create: vi.fn() },
-  },
-}));
+const mockedPrisma = {
+  $transaction: vi.fn(),
+  user: { create: vi.fn(), findUnique: vi.fn(), update: vi.fn(), delete: vi.fn() },
+  organizacao: { create: vi.fn(), findUnique: vi.fn() },
+  veiculo: { findMany: vi.fn(), create: vi.fn(), update: vi.fn() },
+  frete: { findMany: vi.fn(), create: vi.fn(), update: vi.fn() },
+  registroAbastecimento: { findMany: vi.fn(), create: vi.fn() },
+  registroManutencao: { findMany: vi.fn(), create: vi.fn() },
+  despesaGeral: { findMany: vi.fn(), create: vi.fn() },
+};
+
+vi.mock("@/lib/db", () => ({ prisma: mockedPrisma }));
+vi.mock("@/infrastructure/lib/db", () => ({ prisma: mockedPrisma }));
 
 // Mock server-only
 vi.mock("server-only", () => ({}));

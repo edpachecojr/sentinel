@@ -4,7 +4,7 @@ import type { RegistrarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/Re
 
 // Mock the dependencies
 vi.mock("@/infrastructure/services/autenticacao/AutenticacaoServico");
-vi.mock("@/core/useCases/auth/RegistrarUsuarioUseCase");
+vi.mock("@/core/casosDeUso/autenticacao/RegistrarUsuario");
 
 import { AutenticacaoServico } from "@/infrastructure/services/autenticacao/AutenticacaoServico";
 import { RegistrarUsuarioUseCase } from "@/core/casosDeUso/autenticacao/RegistrarUsuario";

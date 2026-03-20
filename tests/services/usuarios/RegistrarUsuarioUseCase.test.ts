@@ -11,7 +11,7 @@ describe("RegistrarUsuarioUseCase", () => {
       registrar: vi.fn().mockResolvedValue({ usuarioId: "user-123" }),
       autenticar: vi.fn(),
       validarSessao: vi.fn(),
-      invalidarSessao: vi.fn(),
+      sair: vi.fn(),
       obterUsuarioPorToken: vi.fn(),
     };
   });

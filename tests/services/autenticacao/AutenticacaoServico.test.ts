@@ -9,6 +9,7 @@ vi.mock("@/infrastructure/lib/auth", () => ({
     api: {
       signUpEmail: vi.fn(),
       signInEmail: vi.fn(),
+      signOut: vi.fn(),
     },
   },
 }));
@@ -146,5 +147,32 @@ describe("AutenticacaoServico.autenticar", () => {
     };
 
     await expect(servico.autenticar(data)).rejects.toThrow("Falha ao autenticar usuário.");
+  });
+});
+
+describe("AutenticacaoServico.sair", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should call auth.api.signOut with headers and asResponse", async () => {
+    const mockResponse = { ok: true };
+    vi.mocked(auth.api.signOut).mockResolvedValue(mockResponse as any);
+
+    const servico = new AutenticacaoServico();
+    await servico.sair();
+
+    expect(auth.api.signOut).toHaveBeenCalledWith({
+      headers: expect.anything(),
+      asResponse: true,
+    });
+  });
+
+  it("should throw AuthenticationError when signOut fails", async () => {
+    const mockResponse = { ok: false };
+    vi.mocked(auth.api.signOut).mockResolvedValue(mockResponse as any);
+
+    const servico = new AutenticacaoServico();
+    await expect(servico.sair()).rejects.toThrow("Falha ao encerrar sessão.");
   });
 });
