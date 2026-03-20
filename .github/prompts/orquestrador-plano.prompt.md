@@ -1,6 +1,8 @@
 ---
 name: plan-orchestrator
 description: Orchestrates multi-step implementation plans by reading an index.md, analyzing step dependencies, dispatching structured-autonomy-implement (sa-implement) subagents for each step, and tracking progress. Use when asked to "orchestrate the plan", "execute the implementation steps", "run the plan", or when a user wants to automate the execution of a structured plan defined in an index.md with individual step files. Also triggers when the user references an implementation-steps folder or says "implementa o plano" / "executa os steps".
+model: GPT-5 mini (copilot)
+agent: agent
 ---
 
 # Plan Orchestrator

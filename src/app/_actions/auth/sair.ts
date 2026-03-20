@@ -1,19 +1,17 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { SairCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/SairCommandHandler";
+import { redirect } from 'next/navigation';
+import { AutenticacaoServico } from '@/infrastructure/services/autenticacao/AutenticacaoServico';
+import { SairHandler } from '@/core/casosDeUso/autenticacao/sairHandler';
 
 export type EstadoSair =
   | { success: true }
   | { success: false; error: string };
 
 export async function sairAction(): Promise<EstadoSair> {
-  const handler = new SairCommandHandler();
-  const resultado = await handler.handle();
+  const autenticacaoServico = new AutenticacaoServico();
+  const handler = new SairHandler(autenticacaoServico);
 
-  if (!resultado.success) {
-    return { success: false, error: resultado.error };
-  }
-
-  redirect("/login");
+  await handler.executar();
+  redirect('/login');
 }

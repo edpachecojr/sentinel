@@ -1,7 +1,7 @@
 import { prisma } from "@/infrastructure/lib/db";
 import type { PrismaClient } from "@/generated/prisma/client";
-import type { IOrganizacaoRepositorio } from "@/core/repositorios/IOrganizacaoRepositorio";
-import type { Organizacao } from "@/core/models/Organizacao";
+import type { IOrganizacaoRepositorio } from "@/core/abstraction/repositories/IOrganizacaoRepositorio";
+import type { Organizacao } from "@/core/entidades/organizacao";
 
 export class PrismaOrganizacaoRepositorio implements IOrganizacaoRepositorio {
   async criar(organizacao: Organizacao, tx?: unknown): Promise<void> {

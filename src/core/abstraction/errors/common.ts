@@ -1,16 +1,16 @@
-export class AuthenticationError extends Error {
+export class DatabaseOperationError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options);
   }
 }
 
-export class UnauthenticatedError extends Error {
+export class NotFoundError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options);
   }
 }
 
-export class UnauthorizedError extends Error {
+export class InputParseError extends Error {
   constructor(message: string, options?: ErrorOptions) {
     super(message, options);
   }

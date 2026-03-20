@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { AutenticarUsuarioUseCase } from "@/core/casosDeUso/autenticacao/AutenticarUsuario";
-import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/abstraction/servicos/IAutenticacaoServico";
 import type { AutenticarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/AutenticarUsuarioDto";
 
 describe("AutenticarUsuarioUseCase", () => {
@@ -8,9 +8,8 @@ describe("AutenticarUsuarioUseCase", () => {
     // Arrange
     const mockServico: IAutenticacaoServico = {
       registrar: vi.fn(),
-      autenticar: vi
-        .fn()
-        .mockResolvedValue({ usuarioId: "user-123" }),
+      autenticar: vi.fn().mockResolvedValue({ usuarioId: "user-123" }),
+      sair: vi.fn(),
     };
 
     const useCase = new AutenticarUsuarioUseCase(mockServico);

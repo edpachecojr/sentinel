@@ -3,7 +3,7 @@ import { prisma } from "@/infrastructure/lib/db";
 import { PrismaUnitOfWork } from "@/infrastructure/services/onboarding/PrismaUnitOfWork";
 import { PrismaOrganizacaoRepositorio } from "@/infrastructure/repositories/PrismaOrganizacaoRepositorio";
 import { PrismaUsuarioRepositorio } from "@/infrastructure/repositories/PrismaUsuarioRepositorio";
-import { Organizacao } from "@/core/models/Organizacao";
+import type { Organizacao } from "@/core/entidades/organizacao";
 
 describe("PrismaUnitOfWork", () => {
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe("PrismaOrganizacaoRepositorio", () => {
 
   it("should create organization using prisma client", async () => {
     const repo = new PrismaOrganizacaoRepositorio();
-    const org = new Organizacao("org-123", "Test Org", "test-org");
+    const org: Organizacao = { id: "org-123", nome: "Test Org", slug: "test-org" };
 
     await repo.criar(org);
 
@@ -48,7 +48,7 @@ describe("PrismaOrganizacaoRepositorio", () => {
 
   it("should create organization using tx if provided", async () => {
     const repo = new PrismaOrganizacaoRepositorio();
-    const org = new Organizacao("org-456", "Org 2", "org-2");
+    const org: Organizacao = { id: "org-456", nome: "Org 2", slug: "org-2" };
     const mockTx = { organizacao: { create: vi.fn().mockResolvedValue({}) } };
 
     await repo.criar(org, mockTx);

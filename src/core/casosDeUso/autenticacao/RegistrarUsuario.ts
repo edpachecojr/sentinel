@@ -1,4 +1,4 @@
-import type { IAutenticacaoServico } from "@/core/casosDeUso/autenticacao/IAutenticacaoServico";
+import type { IAutenticacaoServico } from "@/core/abstraction/servicos/IAutenticacaoServico";
 import type { RegistrarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
 import type { RegistrarUsuarioResultado } from "./dtos/RegistrarUsuarioResultado";
 

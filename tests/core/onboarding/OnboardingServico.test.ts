@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OnboardingServico } from "@/core/casosDeUso/onboarding/OnboardingServico";
-import type { IUnitOfWork } from "@/core/abstractions/IUnitOfWork";
-import type { IOrganizacaoRepositorio } from "@/core/repositorios/IOrganizacaoRepositorio";
-import type { IUsuarioRepositorio } from "@/core/repositorios/IUsuarioRepositorio";
+import type { IUnitOfWork } from "@/core/abstraction/IUnitOfWork";
+import type { IOrganizacaoRepositorio } from "@/core/abstraction/repositories/IOrganizacaoRepositorio";
+import type { IUsuarioRepositorio } from "@/core/abstraction/repositories/IUsuarioRepositorio";
 
 describe("OnboardingServico (Core with DI)", () => {
   let mockUow: IUnitOfWork;

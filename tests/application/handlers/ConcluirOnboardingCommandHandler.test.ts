@@ -39,7 +39,7 @@ describe("ConcluirOnboardingCommandHandler (with DI)", () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error).toBe("Transaction failed");
+    if (!result.success) expect(result.error).toBe("Transaction failed");
   });
 
   it("should handle generic error", async () => {
@@ -55,6 +55,6 @@ describe("ConcluirOnboardingCommandHandler (with DI)", () => {
     });
 
     expect(result.success).toBe(false);
-    expect(result.error).toBe("Erro inesperado ao concluir onboarding.");
+    if (!result.success) expect(result.error).toBe("Erro inesperado ao concluir onboarding.");
   });
 });

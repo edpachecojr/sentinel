@@ -1,6 +1,6 @@
-import type { IAutenticacaoServico } from "@/core/abstraction/servicos/IAutenticacaoServico";
+import type { IAutenticacaoServico } from '@/core/abstraction/servicos/IAutenticacaoServico';
 
-export class SairUsuarioUseCase {
+export class SairHandler {
   constructor(private readonly autenticacaoServico: IAutenticacaoServico) {}
 
   async executar(): Promise<void> {

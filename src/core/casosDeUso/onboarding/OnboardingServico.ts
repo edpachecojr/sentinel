@@ -1,10 +1,10 @@
 import { generateId } from "@/utils/uuid";
 import { generateSlug } from "@/utils/slug";
-import { Organizacao } from "@/core/models/Organizacao";
+import type { Organizacao } from "@/core/entidades/organizacao";
 import type { IOnboardingServico } from "./IOnboardingServico";
-import type { IUnitOfWork } from "@/core/abstractions/IUnitOfWork";
-import type { IOrganizacaoRepositorio } from "@/core/repositorios/IOrganizacaoRepositorio";
-import type { IUsuarioRepositorio } from "@/core/repositorios/IUsuarioRepositorio";
+import type { IUnitOfWork } from "@/core/abstraction/IUnitOfWork";
+import type { IOrganizacaoRepositorio } from "@/core/abstraction/repositories/IOrganizacaoRepositorio";
+import type { IUsuarioRepositorio } from "@/core/abstraction/repositories/IUsuarioRepositorio";
 import type { ConcluirOnboardingDto } from "./dtos/ConcluirOnboardingDto";
 import type { ConcluirOnboardingResultado } from "./dtos/ConcluirOnboardingResultado";
 
@@ -22,11 +22,11 @@ export class OnboardingServico implements IOnboardingServico {
     const organizacaoId = generateId();
 
     await this.uow.executar(async (tx) => {
-      const organizacao = new Organizacao(
-        organizacaoId,
-        dto.orgName,
-        generateSlug(dto.orgName)
-      );
+      const organizacao: Organizacao = {
+        id: organizacaoId,
+        nome: dto.orgName,
+        slug: generateSlug(dto.orgName),
+      };
 
       await this.organizacaoRepo.criar(organizacao, tx);
 
