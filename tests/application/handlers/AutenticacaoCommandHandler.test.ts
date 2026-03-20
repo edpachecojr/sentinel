@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { AutenticacaoCommandHandler } from "@/application/handlers/AutenticacaoCommandHandler";
+import { AutenticacaoCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/AutenticacaoCommandHandler";
 import type { AutenticarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/AutenticarUsuarioDto";
 
 // Mock the dependencies

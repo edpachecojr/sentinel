@@ -97,6 +97,9 @@ Lib / Infrastructure ← src/lib/**  — auth, db, session, logger
 - **Responsibility**: Session enforcement, calling services, cache invalidation
 - **Constraint**: Must always call `sessionService.requireOrgSession()` first for protected routes. No business logic. Calls `revalidatePath()` after mutations.
 
+> **Nota de arquitetura:** a camada `application` (command handlers em um nível separado) não é utilizada neste estágio do projeto. O fluxo recomendado foi ajustado para:
+> `Actions (src/actions) → Core/CasosDeUso (src/core/casosDeUso) → Infrastructure (src/infrastructure/services/repos)`
+
 ### 3.5 UI Layer (`src/components/`, `src/app/`)
 - **Server Components**: Fetch data directly, call server actions via props.
 - **Client Components**: Use `"use client"` directive. Use `authClient` hooks (never server session functions). Use `useSession()` from `@/lib/auth-client`.

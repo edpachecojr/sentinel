@@ -2,8 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { sessionService } from "@/infrastructure/services/SessionService";
-import { concluirOnboardingCommand } from "@/application/commands/ConcluirOnboardingCommand";
-import { ConcluirOnboardingCommandHandler } from "@/application/handlers/ConcluirOnboardingCommandHandler";
+import { concluirOnboardingCommand } from "@/core/casosDeUso/onboarding/commands/ConcluirOnboardingCommand";
+import { ConcluirOnboardingCommandHandler } from "@/core/casosDeUso/onboarding/handlers/ConcluirOnboardingCommandHandler";
 
 export type EstadoOnboarding =
   | { success: true; organizacaoId: string }
@@ -14,7 +14,7 @@ export async function completeOnboarding(data: unknown): Promise<EstadoOnboardin
 
   const parsed = concluirOnboardingCommand.safeParse(data);
   if (!parsed.success) {
-    return { success: false, error: parsed.error.errors[0]?.message ?? "Dados inválidos" };
+    return { success: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   const handler = new ConcluirOnboardingCommandHandler();

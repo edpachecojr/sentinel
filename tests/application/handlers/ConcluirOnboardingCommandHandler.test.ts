@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ConcluirOnboardingCommandHandler } from "@/application/handlers/ConcluirOnboardingCommandHandler";
+import { ConcluirOnboardingCommandHandler } from "@/core/casosDeUso/onboarding/handlers/ConcluirOnboardingCommandHandler";
 
 vi.mock("@/core/casosDeUso/onboarding/ConcluirOnboarding");
 

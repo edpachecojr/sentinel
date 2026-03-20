@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { RegistroUsuarioCommandHandler } from "@/application/handlers/RegistroUsuarioCommandHandler";
+import { RegistroUsuarioCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/RegistroUsuarioCommandHandler";
 import type { RegistrarUsuarioDto } from "@/core/casosDeUso/autenticacao/dtos/RegistrarUsuarioDto";
 
 // Mock the dependencies

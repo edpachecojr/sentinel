@@ -10,7 +10,7 @@ import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
 import { logger } from "@/infrastructure/lib/logger";
-import { registroUsuarioCommand } from "@/application/commands/RegistroUsuarioCommand";
+import { registroUsuarioCommand } from "@/core/casosDeUso/autenticacao/commands/RegistroUsuarioCommand";
 import { registrarUsuarioAction } from "@/app/_actions/auth/registrarUsuario";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
 import type { z } from "zod";

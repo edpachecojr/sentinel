@@ -1,7 +1,7 @@
 "use server";
 
-import { registroUsuarioCommand } from "@/application/commands/RegistroUsuarioCommand";
-import { RegistroUsuarioCommandHandler } from "@/application/handlers/RegistroUsuarioCommandHandler";
+import { registroUsuarioCommand } from "@/core/casosDeUso/autenticacao/commands/RegistroUsuarioCommand";
+import { RegistroUsuarioCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/RegistroUsuarioCommandHandler";
 
 export type EstadoRegistro =
   | { success: true; usuarioId: string }

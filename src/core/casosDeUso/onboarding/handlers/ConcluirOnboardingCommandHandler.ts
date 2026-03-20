@@ -1,6 +1,6 @@
 import { ConcluirOnboardingUseCase } from "@/core/casosDeUso/onboarding/ConcluirOnboarding";
 import { OnboardingServico } from "@/infrastructure/services/onboarding/OnboardingServico";
-import type { ConcluirOnboardingCommand } from "@/application/commands/ConcluirOnboardingCommand";
+import type { ConcluirOnboardingCommand } from "@/core/casosDeUso/onboarding/commands/ConcluirOnboardingCommand";
 import type { ConcluirOnboardingResultado } from "@/core/casosDeUso/onboarding/dtos/ConcluirOnboardingResultado";
 
 export type RespostaOnboarding<T> =

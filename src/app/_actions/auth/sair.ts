@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { SairCommandHandler } from "@/application/handlers/SairCommandHandler";
+import { SairCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/SairCommandHandler";
 
 export type EstadoSair =
   | { success: true }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { SairCommandHandler } from "@/application/handlers/SairCommandHandler";
+import { SairCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/SairCommandHandler";
 
 // Mock the use case to isolate the handler
 vi.mock("@/core/casosDeUso/autenticacao/SairUsuario");

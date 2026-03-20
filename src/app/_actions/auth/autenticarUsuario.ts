@@ -1,7 +1,7 @@
 "use server";
 
-import { autenticarUsuarioCommand } from "@/application/commands/AutenticarUsuarioCommand";
-import { AutenticacaoCommandHandler } from "@/application/handlers/AutenticacaoCommandHandler";
+import { autenticarUsuarioCommand } from "@/core/casosDeUso/autenticacao/commands/AutenticarUsuarioCommand";
+import { AutenticacaoCommandHandler } from "@/core/casosDeUso/autenticacao/handlers/AutenticacaoCommandHandler";
 
 export type EstadoAutenticacao =
   | { success: true; usuarioId: string }
