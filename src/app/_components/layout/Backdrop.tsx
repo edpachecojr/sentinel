@@ -1,24 +1,11 @@
 import { useSidebar } from "@/context/SidebarContext";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { cn } from "@/app/_lib/utils";
 
 const Backdrop: React.FC = () => {
   const { isMobileOpen, toggleMobileSidebar } = useSidebar();
-  const [shouldRender, setShouldRender] = useState(isMobileOpen);
 
-  useEffect(() => {
-    if (isMobileOpen) {
-      setShouldRender(true);
-    }
-  }, [isMobileOpen]);
-
-  const handleAnimationEnd = () => {
-    if (!isMobileOpen) {
-      setShouldRender(false);
-    }
-  };
-
-  if (!shouldRender && !isMobileOpen) return null;
+  if (!isMobileOpen) return null;
 
   return (
     <div
@@ -27,7 +14,6 @@ const Backdrop: React.FC = () => {
         isMobileOpen ? "animate-in fade-in opacity-100" : "animate-out fade-out opacity-0"
       )}
       onClick={toggleMobileSidebar}
-      onAnimationEnd={handleAnimationEnd}
     />
   );
 };

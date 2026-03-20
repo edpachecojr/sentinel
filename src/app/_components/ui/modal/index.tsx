@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { cn } from "@/app/_lib/utils";
 
 interface ModalProps {
@@ -20,19 +20,6 @@ export const Modal: React.FC<ModalProps> = ({
   isFullscreen = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const [shouldRender, setShouldRender] = useState(isOpen);
-
-  useEffect(() => {
-    if (isOpen) {
-      setShouldRender(true);
-    }
-  }, [isOpen]);
-
-  const handleAnimationEnd = () => {
-    if (!isOpen) {
-      setShouldRender(false);
-    }
-  };
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -62,7 +49,7 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen]);
 
-  if (!shouldRender && !isOpen) return null;
+  if (!isOpen) return null;
 
   const contentClasses = isFullscreen
     ? "w-full h-full"
@@ -74,7 +61,6 @@ export const Modal: React.FC<ModalProps> = ({
         "fixed inset-0 flex items-center justify-center overflow-y-auto modal z-99999 p-4 sm:p-6",
         isOpen ? "animate-in fade-in duration-200" : "animate-out fade-out duration-200"
       )}
-      onAnimationEnd={handleAnimationEnd}
     >
       {!isFullscreen && (
         <div

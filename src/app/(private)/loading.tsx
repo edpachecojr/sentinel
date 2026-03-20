@@ -1,3 +1,5 @@
+"use client";
+
 export default function PrivateLoading() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 animate-in fade-in duration-500">
