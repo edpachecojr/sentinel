@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Form from "@/components/form/Form";
@@ -9,12 +9,12 @@ import Input from "@/components/form/input/InputField";
 import Button from "@/components/ui/button/Button";
 import Alert from "@/components/ui/alert/Alert";
 import { SocialAuthButtons } from "@/components/auth/SocialAuthButtons";
-import { authClient } from "@/infrastructure/lib/auth-client";
+import { autenticarUsuarioAction } from "@/app/_actions/auth/autenticarUsuario";
 import { logger } from "@/infrastructure/lib/logger";
 
 export function LoginForm() {
   const router = useRouter();
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
@@ -25,28 +25,31 @@ export function LoginForm() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    setIsPending(true);
 
-    try {
-      // Use better-auth client to sign in
-      await authClient.signIn.email({
-        email: formData.email,
-        password: formData.password,
-      });
+    startTransition(async () => {
+      try {
+        const resultado = await autenticarUsuarioAction({
+          email: formData.email,
+          password: formData.password,
+        });
 
-      // Redirect to dashboard
-      router.push("/dashboard");
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Não foi possível entrar";
-      setError(message);
-      logger.error("login:error", { error: message, email: formData.email });
-    } finally {
-      setIsPending(false);
-    }
+        if (!resultado.success) {
+          setError(resultado.error);
+          logger.error("login:error", { error: resultado.error, email: formData.email });
+          return;
+        }
+
+        // Redirect to dashboard
+        router.push("/dashboard");
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Não foi possível entrar";
+        setError(message);
+        logger.error("login:error", { error: message, email: formData.email });
+      }
+    });
   };
 
   return (
