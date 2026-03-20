@@ -1,3 +1,37 @@
+/**
+ * CPF (Cadastro de Pessoas Físicas) validation utilities for MeuCargueiro
+ *
+ * USAGE IN ZOD SCHEMAS:
+ * ======================
+ * When building schemas for CPF fields (motorista/usuário information),
+ * use `validateCPF()` in Zod refinements:
+ *
+ * Example - User CPF registration:
+ * ─────────────────────────────────
+ *   const usuarioCPFSchema = z.object({
+ *     email: z.string().email(),
+ *     cpf: z.string()
+ *       .min(1, "CPF obrigatorio")
+ *       .refine(validateCPF, "CPF invalido"),
+ *   });
+ *
+ * Example - With custom error message:
+ * ────────────────────────────────────
+ *   const usuarioSchema = z.object({
+ *     cpf: z.string().refine(
+ *       (val) => validateCPF(val),
+ *       { message: "CPF deve ter 11 digitos válidos (ex: 111.444.777-35)" }
+ *     ),
+ *   });
+ *
+ * FEATURES:
+ * =========
+ * - Accepts both formatted (111.444.777-35) and unformatted (11144477735) CPF
+ * - Automatically rejects known invalid CPFs (all same digits: 00000000000, 11111111111, etc)
+ * - Validates check digits using official CPF algorithm
+ * - Only requires string input (no type coercion needed)
+ */
+
 const CPF_LENGTH = 11;
 
 function onlyDigits(value: string) {

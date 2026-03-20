@@ -1,3 +1,49 @@
+/**
+ * Date utility functions for MeuCargueiro
+ *
+ * These functions provide timezone-aware date parsing and formatting,
+ * essential for serializing Prisma Date fields across timezones.
+ *
+ * USAGE IN ZOD SCHEMAS:
+ * ======================
+ * When building schemas for date fields (fretes, maintenance records, fuel logs),
+ * use `parseDate()` in Zod transforms to ensure consistent handling:
+ *
+ * Example - Frete schema:
+ * ────────────────────────
+ *   const criarFreteSchema = z.object({
+ *     data: z.string().pipe(
+ *       z.coerce.date()
+ *         .transform(parseDate)  // ← Normalize date input
+ *         .refine(d => d !== null, "Data invalida")
+ *     ),
+ *     // ...
+ *   });
+ *
+ * Example - Maintenance record:
+ * ─────────────────────────────
+ *   const manutencaoSchema = z.object({
+ *     data: z.string().transform(parseDate).refine(d => d !== null),
+ *     proxima: z.string().optional().transform(d => d ? parseDate(d) : null),
+ *   });
+ *
+ * Example - Server Component serialization:
+ * ─────────────────────────────────────────
+ *   // When fetching dates from Prisma in RSC, format before passing to client:
+ *   const fretes = await db.frete.findMany({ where: { organizacaoId } });
+ *   return fretes.map(f => ({
+ *     ...f,
+ *     data: formatDate(f.data),      // → "15/01/2024"
+ *     criadoEm: formatDateTime(f.criadoEm), // → "15/01/2024, 10:30"
+ *   }));
+ *
+ * TIMEZONE HANDLING:
+ * ==================
+ * All formatting functions apply America/Sao_Paulo timezone (UTC-3).
+ * This ensures consistent display regardless of server/client location.
+ * Use `toPlainDateString()` when serializing @db.Date to JSON (no time info).
+ */
+
 const DEFAULT_TIME_ZONE = "America/Sao_Paulo";
 
 export function getNow(): Date {
